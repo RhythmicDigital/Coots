@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Audio;
 
 public enum SfxId { Grapple }
 public enum MusicId { Title, Gameplay }
@@ -9,6 +10,7 @@ public class AudioManager : MonoBehaviour
 {
     [SerializeField] AudioSource musicPlayer;
     [SerializeField] AudioSource sfxPlayer;
+    [SerializeField] AudioMixer mixer;
     [SerializeField] List<SfxData> sfxList;
     [SerializeField] List<MusicData> musicList;
 
@@ -56,6 +58,16 @@ public class AudioManager : MonoBehaviour
 
         var audioData = sfxLookup[audioId];
         PlaySfx(audioData.clip);
+    }
+
+    public void SetMusicVolume(float sliderValue)
+    {
+        mixer.SetFloat("MusicVolume", Mathf.Log10(sliderValue) * 20);
+    }
+
+    public void SetSfxVolume(float sliderValue)
+    {
+        mixer.SetFloat("SFXVolume", Mathf.Log10(sliderValue) * 20);
     }
 }
 

@@ -5,8 +5,14 @@ using UnityEngine;
 public enum GameState {Playing, Paused}
 public class GameController : MonoBehaviour
 {
+    [SerializeField] InputController inputController;
+    [SerializeField] CharacterController2D characterController;
+    [SerializeField] GrappleController grappleController;
     [SerializeField] Camera worldCamera;
-
+    [SerializeField] GameObject pauseScreen;
+    [SerializeField] GameObject titleScreen;
+    [SerializeField] GameObject deathScreen;
+    [SerializeField] GameObject endScreen;
     GameState state;
     GameState stateBeforePause;
 
@@ -36,10 +42,12 @@ public class GameController : MonoBehaviour
         if (pause)
         {
             stateBeforePause = state;
+            pauseScreen.SetActive(true);
             state = GameState.Paused;
         }
         else 
         {
+            pauseScreen.SetActive(false);
             state = stateBeforePause;
         }
     }
