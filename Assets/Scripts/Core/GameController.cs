@@ -31,10 +31,18 @@ public class GameController : MonoBehaviour
         {
             inputController.HandleUpdate();
             grappleController.HandleUpdate();
+            
+            if (Input.GetButtonDown("Pause"))
+            {
+                PauseGame(true);
+            }
         }
         else if (state == GameState.Paused)
         {
-            
+            if (Input.GetButtonDown("Pause"))
+            {
+                PauseGame(false);
+            }
         }
     }
 
@@ -58,11 +66,13 @@ public class GameController : MonoBehaviour
             stateBeforePause = state;
             pauseScreen.SetActive(true);
             state = GameState.Paused;
+            Time.timeScale = 0;
         }
         else 
         {
             pauseScreen.SetActive(false);
             state = stateBeforePause;
+            Time.timeScale = 1;
         }
     }
 }
