@@ -30,18 +30,20 @@ class InputController : MonoBehaviour
     public void HandleUpdate()
     {
         MoveUpdate();
-        GrapplUpdate();
+        GrappleUpdate();
     }
 
     private void MoveUpdate()
     {
+        if (_grappleController.Grappling) return;
+
         _xDir = Input.GetAxis("Horizontal");
         var y = Input.GetAxis("Vertical");
         _crouch = y < 0 || Input.GetKey(KeyCode.LeftShift);
         _jump = y > 0 || Input.GetKey(KeyCode.Space);
     }
 
-    private void GrapplUpdate()
+    private void GrappleUpdate()
     {
         var mousePos = (Vector3)Input.mousePosition;
         mousePos.z = transform.position.z - _camera.transform.position.z;
@@ -56,6 +58,7 @@ class InputController : MonoBehaviour
             _grappleController.Disconnect();
             return;
         }
+
         if (!Input.GetButtonDown("Fire1")) return;
 
         var hit = Physics2D.Raycast(_aimParent.position, aimDirection, _maxGrappleDistance, _canBeGrappled);
