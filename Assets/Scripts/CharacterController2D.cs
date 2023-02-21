@@ -21,6 +21,8 @@ public class CharacterController2D : MonoBehaviour
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private Vector3 m_Velocity = Vector3.zero;
 
+    private PhysicsMaterial2D _groundMaterial, _airMaterial;
+
     private float m_lastJump;
 
     [Header("Events")]
@@ -43,6 +45,11 @@ public class CharacterController2D : MonoBehaviour
 
         if (OnCrouchEvent == null)
             OnCrouchEvent = new BoolEvent();
+
+        _groundMaterial = m_Rigidbody2D.sharedMaterial;
+        _airMaterial = new PhysicsMaterial2D("AirMaterial");
+        _airMaterial.bounciness = _groundMaterial.bounciness;
+        _airMaterial.friction = 0;
     }
 
     private void FixedUpdate()
@@ -58,12 +65,19 @@ public class CharacterController2D : MonoBehaviour
             if (colliders[i].gameObject != gameObject)
             {
                 m_Grounded = true;
-                if (!wasGrounded)
-                {
-                    OnLandEvent.Invoke();
-                    m_lastJump = Time.fixedTime;
-                }
+                break;
             }
+        }
+
+        if (m_Grounded != wasGrounded)
+        {
+            if (!wasGrounded)
+            {
+                OnLandEvent.Invoke();
+                // 1 frame jumps can mess stuff up
+                m_lastJump = Time.fixedTime;
+            }
+            m_Rigidbody2D.sharedMaterial = m_Grounded ? _groundMaterial : _airMaterial;
         }
     }
 
