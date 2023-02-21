@@ -24,6 +24,8 @@ public class GrappleController : MonoBehaviour
 
     private bool _connected;
 
+    public bool Grappling => _connected;
+
     public void ConnectToPoint(Vector3 point)
     {
         if (_connected)
@@ -67,6 +69,13 @@ public class GrappleController : MonoBehaviour
     public void HandleUpdate()
     {
         if (!_connected) return;
+
+        _maxDistance -= Time.deltaTime * 15f;
+        if (_maxDistance < 0)
+        {
+            Disconnect();
+            return;
+        }
 
         RemoveObsoleteRopePoints();
         CreateNewRopePoints();
