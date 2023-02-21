@@ -16,6 +16,8 @@ class InputController : MonoBehaviour
 
     [SerializeField]
     private GrappleController _grappleController;
+    [SerializeField]
+    private GrabController _grabController;
 
     private Camera _camera;
 
@@ -56,8 +58,10 @@ class InputController : MonoBehaviour
         if (Input.GetButtonUp("Fire1"))
         {
             _grappleController.Disconnect();
+            _grabController.Disconnect();
             return;
         }
+        if (_grappleController.Grappling || _grabController.Grabbing) return;
 
         if (!Input.GetButtonDown("Fire1")) return;
 
@@ -72,7 +76,7 @@ class InputController : MonoBehaviour
         }
         else if (grappleObj.Interaction == GrappleObject.GrappleInteraction.Pull)
         {
-            hit.rigidbody.AddForceAtPosition(-aimDirection.normalized * 5, hit.point, ForceMode2D.Impulse);
+            _grabController.ConnectToItem(hit);
         }
         else
         {

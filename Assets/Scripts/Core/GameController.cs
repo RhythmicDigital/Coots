@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
     [SerializeField] InputController inputController;
     [SerializeField] CharacterController2D characterController;
     [SerializeField] GrappleController grappleController;
+    [SerializeField] GrabController grabController;
     [SerializeField] Camera worldCamera;
     [SerializeField] GameObject pauseScreen;
     [SerializeField] GameObject titleScreen;
@@ -31,6 +32,7 @@ public class GameController : MonoBehaviour
         {
             inputController.HandleUpdate();
             grappleController.HandleUpdate();
+            grabController.HandleUpdate();
             
             if (Input.GetButtonDown("Pause"))
             {
@@ -52,6 +54,7 @@ public class GameController : MonoBehaviour
         {
             inputController.HandleFixedUpdate();
             characterController.HandleFixedUpdate();
+            grabController.HandleFixedUpdate();
         }
         else if (state == GameState.Paused)
         {

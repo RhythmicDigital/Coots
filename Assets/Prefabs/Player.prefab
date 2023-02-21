@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6038628004167853484}
   - component: {fileID: 3009141713868462320}
+  - component: {fileID: 8229317383843811598}
   - component: {fileID: 2607257513337624916}
   m_Layer: 11
   m_Name: Endpoint
@@ -48,6 +49,19 @@ MonoBehaviour:
   _ropeLayerMask:
     serializedVersion: 2
     m_Bits: 768
+  _ropeJointPrefab: {fileID: 4000419276990806601, guid: 7407737faecbee14ca4e6bd9618f091e, type: 3}
+--- !u!114 &8229317383843811598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192299167641220224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d0ab467975aac0479471adcf278ff12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _ropeJointPrefab: {fileID: 4000419276990806601, guid: 7407737faecbee14ca4e6bd9618f091e, type: 3}
 --- !u!120 &2607257513337624916
 LineRenderer:
@@ -409,6 +423,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _grappleController: {fileID: 3009141713868462320}
+  _grabController: {fileID: 8229317383843811598}
 --- !u!114 &2162537684225880274
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1611,7 +1611,6 @@ RectTransform:
   m_Children:
   - {fileID: 1215031572}
   - {fileID: 321195437}
-  - {fileID: 1896739553}
   m_Father: {fileID: 562082958}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1893,13 +1892,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1049408297}
-  m_Father: {fileID: 1450149901}
-  m_RootOrder: 2
+  m_Father: {fileID: 2560452287344840447}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 633.9, y: 202}
+  m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1981499504
 GameObject:
@@ -2069,6 +2068,7 @@ Transform:
   - {fileID: 2560452288481768091}
   - {fileID: 4434477019500901879}
   - {fileID: 1590794903}
+  - {fileID: 1896739553}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2305,6 +2305,7 @@ MonoBehaviour:
   inputController: {fileID: 4434477019500901835}
   characterController: {fileID: 4434477019500901878}
   grappleController: {fileID: 741426771054206420}
+  grabController: {fileID: 5889834497370952746}
   worldCamera: {fileID: 2560452288737678879}
   pauseScreen: {fileID: 562082957}
   titleScreen: {fileID: 981638606}
@@ -2642,3 +2643,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2162537684225880275, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
   m_PrefabInstance: {fileID: 2560452288063079716}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5889834497370952746 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8229317383843811598, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+  m_PrefabInstance: {fileID: 2560452288063079716}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d0ab467975aac0479471adcf278ff12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
