@@ -64,7 +64,7 @@ public class GrappleController : MonoBehaviour
         _rbTransform = _ropeJoint.connectedBody.transform;
     }
 
-    private void Update()
+    public void HandleUpdate()
     {
         if (!_connected) return;
 

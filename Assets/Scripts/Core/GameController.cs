@@ -29,7 +29,20 @@ public class GameController : MonoBehaviour
     {
         if (state == GameState.Playing)
         {
-
+            inputController.HandleUpdate();
+            grappleController.HandleUpdate();
+        }
+        else if (state == GameState.Paused)
+        {
+            
+        }
+    }
+    
+    void FixedUpdate() 
+    {
+        if (state == GameState.Playing)
+        {
+            characterController.HandleFixedUpdate();
         }
         else if (state == GameState.Paused)
         {

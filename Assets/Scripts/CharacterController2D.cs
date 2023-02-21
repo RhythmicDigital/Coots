@@ -52,7 +52,7 @@ public class CharacterController2D : MonoBehaviour
         _airMaterial.friction = 0;
     }
 
-    private void FixedUpdate()
+    public void HandleFixedUpdate()
     {
         bool wasGrounded = m_Grounded;
         m_Grounded = false;

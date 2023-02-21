@@ -27,7 +27,7 @@ class InputController : MonoBehaviour
         _camera = Camera.main;
     }
 
-    private void Update()
+    public void HandleUpdate()
     {
         MoveUpdate();
         GrapplUpdate();
