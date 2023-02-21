@@ -71,6 +71,5 @@ public class GrabController : MonoBehaviour
 
         _ropeJointTransform.position = transform.position;
         _ropeJoint.distance = _distance;
-        Debug.Log(_distance);
     }
 }

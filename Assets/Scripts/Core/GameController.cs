@@ -69,12 +69,16 @@ public class GameController : MonoBehaviour
             stateBeforePause = state;
             pauseScreen.SetActive(true);
             state = GameState.Paused;
+
+            Physics.autoSimulation = false;
             Time.timeScale = 0;
         }
-        else 
+        else
         {
             pauseScreen.SetActive(false);
             state = stateBeforePause;
+
+            Physics.autoSimulation = true;
             Time.timeScale = 1;
         }
     }
