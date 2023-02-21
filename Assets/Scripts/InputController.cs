@@ -15,9 +15,6 @@ class InputController : MonoBehaviour
     private LayerMask _canBeGrappled;
 
     [SerializeField]
-    private LayerMask _ground;
-
-    [SerializeField]
     private GrappleController _grappleController;
 
     private Camera _camera;
@@ -61,10 +58,23 @@ class InputController : MonoBehaviour
         }
         if (!Input.GetButtonDown("Fire1")) return;
 
-        var hit = Physics2D.Raycast(_aimParent.position, aimDirection, _maxGrappleDistance, _canBeGrappled | _ground);
+        var hit = Physics2D.Raycast(_aimParent.position, aimDirection, _maxGrappleDistance, _canBeGrappled);
         if (!hit) return;
+        var hitGo = hit.rigidbody ? hit.rigidbody.gameObject : hit.collider.gameObject;
+        var grappleObj = hitGo.GetComponent<GrappleObject>();
 
-        _grappleController.ConnectToPoint(hit.point);
+        if (grappleObj == null || grappleObj.Interaction == GrappleObject.GrappleInteraction.Connect)
+        {
+            _grappleController.ConnectToPoint(hit.point);
+        }
+        else if (grappleObj.Interaction == GrappleObject.GrappleInteraction.Pull)
+        {
+            hit.rigidbody.AddForceAtPosition(-aimDirection.normalized * 5, hit.point, ForceMode2D.Impulse);
+        }
+        else
+        {
+            grappleObj.Interact?.Invoke(hit);
+        }
     }
 
     private void FixedUpdate()
