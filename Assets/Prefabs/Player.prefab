@@ -362,6 +362,7 @@ GameObject:
   - component: {fileID: 2162537684225880303}
   - component: {fileID: 2162537684225880274}
   - component: {fileID: 2162537684225880273}
+  - component: {fileID: -4864724601367213608}
   m_Layer: 11
   m_Name: Player
   m_TagString: Untagged
@@ -407,9 +408,6 @@ MonoBehaviour:
   _canBeGrappled:
     serializedVersion: 2
     m_Bits: 512
-  _ground:
-    serializedVersion: 2
-    m_Bits: 256
   _grappleController: {fileID: 3009141713868462320}
 --- !u!114 &2162537684225880274
 MonoBehaviour:
@@ -460,6 +458,26 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &-4864724601367213608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2162537684225880277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca16d93a2eaef442eac56d527bedfcec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idleSprites:
+  - {fileID: 0}
+  jumpSprites:
+  - {fileID: 0}
+  walkRightSprites:
+  - {fileID: 0}
+  shootSprites:
+  - {fileID: 0}
 --- !u!1 &7002751685958876495
 GameObject:
   m_ObjectHideFlags: 0

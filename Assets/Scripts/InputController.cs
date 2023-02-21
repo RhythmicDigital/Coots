@@ -77,7 +77,7 @@ class InputController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    public void HandleFixedUpdate()
     {
         _characterController.Move(_xDir, _crouch, _jump);
     }

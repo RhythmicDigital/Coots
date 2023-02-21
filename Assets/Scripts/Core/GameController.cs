@@ -37,11 +37,12 @@ public class GameController : MonoBehaviour
             
         }
     }
-    
+
     void FixedUpdate() 
     {
         if (state == GameState.Playing)
         {
+            inputController.HandleFixedUpdate();
             characterController.HandleFixedUpdate();
         }
         else if (state == GameState.Paused)
