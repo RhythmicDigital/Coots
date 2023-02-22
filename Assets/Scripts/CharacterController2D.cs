@@ -157,7 +157,7 @@ public class CharacterController2D : MonoBehaviour
             var smoothing = m_MovementSmoothing;
             var xAbs = Mathf.Abs(m_Rigidbody2D.velocity.x);
             var xSign = Mathf.Sign(m_Rigidbody2D.velocity.x);
-            if (m_AirControl && (xAbs > 10f || (xSign == Mathf.Sign(move))))
+            if (!m_Grounded && (xAbs > 10f || (xSign == Mathf.Sign(move))))
             {
                 smoothing *= 100;
             }
