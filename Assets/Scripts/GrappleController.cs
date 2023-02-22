@@ -14,26 +14,31 @@ public class GrappleController : MonoBehaviour
     private GameObject _anchorPosition;
     private Transform _rbTransform;
 
+    private Transform _connectedTo;
+    private Vector3 _connectedToOffset, _startPosition;
 
-    private Vector3 _connectedPoint;
     private float _maxDistance;
 
     private LineRenderer _lr;
-    private readonly List<(Vector2 pos, Vector2 normal)> _ropePositions = new();
-    private float _currentDistance;
+    private readonly List<(Vector2 pos, bool clockwise)> _ropePositions = new();
+    private float _currentDistance, _startDistance;
 
     private bool _connected;
 
     public bool Grappling => _connected;
 
-    public void ConnectToPoint(Vector3 point)
+    public void ConnectToPoint(Transform obj, Vector3 point)
     {
         if (_connected)
         {
             Disconnect();
         }
 
-        _connectedPoint = point;
+        _startPosition = point;
+        _connectedTo = obj;
+        _connectedToOffset = obj.InverseTransformPoint(point);
+        _startDistance = 0;
+
         _maxDistance = Vector3.Distance(point, transform.position);
 
         _anchorPosition.transform.position = point;
@@ -73,55 +78,143 @@ public class GrappleController : MonoBehaviour
     {
         if (!_connected) return;
 
-        _maxDistance -= Time.deltaTime * 15f;
-        if (_maxDistance < 0)
+
+        if (_maxDistance - _currentDistance > 1)
         {
-            Disconnect();
-            return;
+            _maxDistance = Mathf.MoveTowards(_maxDistance, _currentDistance + 1, Time.deltaTime * 15);
         }
 
+        var connectedToPos = _connectedTo.TransformPoint(_connectedToOffset);
+        var startMoved = connectedToPos != _startPosition;
+        _startPosition = connectedToPos;
+
         RemoveObsoleteRopePoints();
+        if (startMoved && _ropePositions.Count > 0)
+        {
+            RemoveObsoleteRopePoints(true);
+
+            _currentDistance -= _startDistance;
+            // Should always be larger than 0
+            if (_ropePositions.Count > 0)
+            {
+                _startDistance = Vector2.Distance(_ropePositions[0].pos, _startPosition);
+                _currentDistance += _startDistance;
+            }
+
+            CreateNewRopePoints(true);
+        }
+
         CreateNewRopePoints();
         UpdateRopeVisuals();
     }
 
     private Vector2 GetClosestColliderPointFromRaycastHit(RaycastHit2D hit, PolygonCollider2D polyCollider)
     {
-        var distanceDictionary = polyCollider.points.ToDictionary<Vector2, float, Vector2>(
-            position => Vector2.Distance(hit.point, polyCollider.transform.TransformPoint(position)),
-            position => polyCollider.transform.TransformPoint(position));
+        if (polyCollider.points.Length == 0) return Vector2.zero;
 
-        var orderedDictionary = distanceDictionary.OrderBy(e => e.Key);
-        return orderedDictionary.Any() ? orderedDictionary.First().Value : Vector2.zero;
+        return polyCollider.points
+            .Select(point => polyCollider.transform.TransformPoint(point))
+            .OrderBy(point => Vector2.SqrMagnitude((Vector2)point - hit.point))
+            .First();
+    }
+    private Vector2 GetClosestColliderPointFromRaycastHit(RaycastHit2D hit, BoxCollider2D boxCollider)
+    {
+        var hitLocal = (Vector2)boxCollider.transform.InverseTransformPoint(hit.point);
+        var compareTo = boxCollider.size / 2;
+
+        var closestPoint = Vector2.zero;
+        var closestDistance = float.MaxValue;
+        for (var i = 0; i < 4; i++)
+        {
+            var distance = Vector2.SqrMagnitude(hitLocal - (compareTo + boxCollider.offset));
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestPoint = compareTo;
+            }
+            compareTo = new Vector2(-compareTo.y, compareTo.x);
+        }
+
+        return boxCollider.transform.TransformPoint(closestPoint);
     }
 
-    private void CreateNewRopePoints()
+    private void CreateNewRopePoints(bool inverse = false)
     {
-        var lastRopePoint = _ropePositions.Count == 0 ? (Vector2)_connectedPoint : _ropePositions[^1].pos;
-        var dir = lastRopePoint - (Vector2)transform.position;
-        var playerToCurrentNextHit = Physics2D.Raycast(transform.position, dir.normalized, dir.magnitude - 0.1f, _ropeLayerMask);
-        if (playerToCurrentNextHit)
+        if (inverse && _ropePositions.Count == 0)
         {
-            var colliderWithVertices = playerToCurrentNextHit.collider as PolygonCollider2D;
-            if (colliderWithVertices != null)
+            // Handled by regular check
+            return;
+        }
+
+        Vector2 yourEnd;
+        Vector2 lastRopePoint;
+        if (inverse)
+        {
+            yourEnd = _ropePositions.Count == 0 ? transform.position : _ropePositions[0].pos;
+            // last rope point is always start position when inserting to beginning of list
+            lastRopePoint = _startPosition;
+        }
+        else
+        {
+            yourEnd = transform.position;
+            lastRopePoint = _ropePositions.Count == 0 ? _startPosition : _ropePositions[^1].pos;
+        }
+
+        var dir = lastRopePoint - yourEnd;
+        var dirNormalized = dir.normalized;
+
+        var hit = inverse ?
+            Physics2D.Raycast(lastRopePoint + dirNormalized * -0.05f, -dirNormalized, dir.magnitude - 0.1f, _ropeLayerMask) :
+        Physics2D.Raycast(yourEnd + dirNormalized * 0.05f, dirNormalized, dir.magnitude - 0.1f, _ropeLayerMask);
+
+        Vector2 closestPointToHit = Vector2.zero;
+        var foundPoint = false;
+
+        if (hit)
+        {
+            foundPoint = true;
+            if (hit.collider is PolygonCollider2D colliderWithVertices)
             {
-                var closestPointToHit =
-                    GetClosestColliderPointFromRaycastHit(playerToCurrentNextHit, colliderWithVertices);
+                closestPointToHit =
+                    GetClosestColliderPointFromRaycastHit(hit, colliderWithVertices);
+            }
+            else if (hit.collider is BoxCollider2D boxCollider)
+            {
+                closestPointToHit =
+                    GetClosestColliderPointFromRaycastHit(hit, boxCollider);
+            }
+            else
+            {
+                foundPoint = false;
+            }
 
-                var cc = Vector2.SignedAngle(closestPointToHit - lastRopePoint, dir) > 0;
-                var normal = closestPointToHit - lastRopePoint;
-                if (cc)
-                {
-                    (normal.x, normal.y) = (-normal.y, normal.x);
-                }
-                else
-                {
-                    (normal.x, normal.y) = (normal.y, -normal.x);
-                }
+            foundPoint &= closestPointToHit != lastRopePoint && closestPointToHit != yourEnd;
+        }
 
-                _ropePositions.Add((closestPointToHit, normal));
-                _currentDistance += (closestPointToHit - lastRopePoint).magnitude;
-                lastRopePoint = closestPointToHit;
+
+        if (foundPoint)
+        {
+            var clockwise = Vector2.SignedAngle(closestPointToHit - lastRopePoint, dir) <= 0;
+
+            var value = (closestPointToHit, clockwise);
+            if (inverse)
+            {
+                _ropePositions.Insert(0, value);
+                _currentDistance -= _startDistance;
+                _startDistance -= hit.distance;
+                _currentDistance += Vector2.Distance(_ropePositions[1].pos, _ropePositions[0].pos);
+            }
+            else
+            {
+                _ropePositions.Add(value);
+            }
+
+            _currentDistance += (closestPointToHit - lastRopePoint).magnitude;
+            lastRopePoint = closestPointToHit;
+
+            if (_ropePositions.Count == 1)
+            {
+                _startDistance = _currentDistance;
             }
         }
 
@@ -129,34 +222,83 @@ public class GrappleController : MonoBehaviour
         {
             _currentDistance = 0;
         }
+        else if (_ropePositions.Count == 1)
+        {
+            _currentDistance = Vector2.Distance(_ropePositions[0].pos, _startPosition);
+        }
 
         _anchorPosition.transform.position = lastRopePoint;
         _ropeJoint.distance = _maxDistance - _currentDistance;
     }
 
-    private void RemoveObsoleteRopePoints()
+    private void RemoveObsoleteRopePoints(bool inverse = false)
     {
-        if (_ropePositions.Count >= 1)
+        if (_ropePositions.Count < 1)
         {
+            return;
+        }
+        var yourEnd = inverse ? (Vector2)_startPosition : (Vector2)transform.position;
+
+        bool CheckPoint(int i, Vector2 prevPosition)
+        {
+            var (pos, clockwise) = _ropePositions[i];
+
+            var normal = pos - prevPosition;
+            if (clockwise != inverse)
+            {
+                (normal.x, normal.y) = (normal.y, -normal.x);
+            }
+            else
+            {
+                (normal.x, normal.y) = (-normal.y, normal.x);
+            }
+
+            if (Vector2.Dot(pos - yourEnd, normal) >= 0)
+            {
+                return true;
+            }
+
+            _currentDistance -= (prevPosition - pos).magnitude;
+            return false;
+        }
+
+        var removeFrom = 0;
+        var removeTo = _ropePositions.Count;
+        if (inverse)
+        {
+            removeTo = removeFrom;
+            for (var i = 0; i < _ropePositions.Count; i++)
+            {
+                var prevPosition = i == _ropePositions.Count - 1 ? (Vector2)transform.position : _ropePositions[i + 1].pos;
+                var end = CheckPoint(i, prevPosition);
+
+                if (end) break;
+                removeTo = i + 1;
+            }
+        }
+        else
+        {
+            removeFrom = removeTo;
             for (var i = _ropePositions.Count - 1; i >= 0; i--)
             {
-                var (pos, normal) = _ropePositions[i];
-                if (Vector2.Dot(pos - (Vector2)transform.position, normal) >= 0)
-                {
-                    break;
-                }
+                var prevPosition = i == 0 ? (Vector2)_startPosition : _ropePositions[i - 1].pos;
+                var end = CheckPoint(i, prevPosition);
 
-                var prevPosition = i == 0 ? (Vector2)_connectedPoint : _ropePositions[i - 1].pos;
-                _currentDistance -= (prevPosition - pos).magnitude;
-                _ropePositions.RemoveAt(i);
+                if (end) break;
+                removeFrom = i;
             }
+        }
+
+        if (removeFrom != removeTo)
+        {
+            _ropePositions.RemoveRange(removeFrom, removeTo - removeFrom);
         }
     }
 
     private void UpdateRopeVisuals()
     {
         _lr.positionCount = _ropePositions.Count + 2;
-        _lr.SetPosition(0, _connectedPoint);
+        _lr.SetPosition(0, _startPosition);
         _lr.SetPosition(_lr.positionCount - 1, transform.position);
         for (var i = 0; i < _ropePositions.Count; i++)
         {

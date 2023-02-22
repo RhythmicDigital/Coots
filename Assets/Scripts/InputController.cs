@@ -37,8 +37,6 @@ class InputController : MonoBehaviour
 
     private void MoveUpdate()
     {
-        if (_grappleController.Grappling) return;
-
         _xDir = Input.GetAxis("Horizontal");
         var y = Input.GetAxis("Vertical");
         _crouch = y < 0 || Input.GetKey(KeyCode.LeftShift);
@@ -73,7 +71,7 @@ class InputController : MonoBehaviour
 
         if (grappleObj == null || grappleObj.Interaction == GrappleObject.GrappleInteraction.Connect)
         {
-            _grappleController.ConnectToPoint(hit.point);
+            _grappleController.ConnectToPoint(hit.transform, hit.point);
 
             GameController.i.PlayerAnimator.SetState(CharacterState.Shooting);
             AudioManager.i.PlaySfx(SfxId.Shoot);
