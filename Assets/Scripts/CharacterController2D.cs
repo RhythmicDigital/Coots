@@ -120,7 +120,7 @@ public class CharacterController2D : MonoBehaviour
         //only control the player if grounded or airControl is turned on
         if (m_Grounded || m_AirControl)
         {
-            
+
             // If crouching
             if (crouch)
             {
@@ -152,9 +152,19 @@ public class CharacterController2D : MonoBehaviour
 
             // Move the character by finding the target velocity
             Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
+
+
+            var smoothing = m_MovementSmoothing;
+            var xAbs = Mathf.Abs(m_Rigidbody2D.velocity.x);
+            var xSign = Mathf.Sign(m_Rigidbody2D.velocity.x);
+            if (m_AirControl && (xAbs > 10f || (xSign == Mathf.Sign(move))))
+            {
+                smoothing *= 100;
+            }
+
             // And then smoothing it out and applying it to the character
-            m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-            
+            m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, smoothing);
+
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !m_FacingRight)
             {
@@ -168,6 +178,7 @@ public class CharacterController2D : MonoBehaviour
                 Flip();
             }
         }
+
         // If the player should jump...
         if (m_Grounded && jump && m_lastJump + 0.1f < Time.fixedTime)
         {
@@ -178,8 +189,8 @@ public class CharacterController2D : MonoBehaviour
             OnJumpEvent.Invoke();
         }
 
-        if (Mathf.Abs(move) > 0)  
-        { 
+        if (Mathf.Abs(move) > 0)
+        {
             m_Moving = true;
             if (m_Moving != m_wasMoving && !crouch && !jump)
                 OnMoveEvent.Invoke();
