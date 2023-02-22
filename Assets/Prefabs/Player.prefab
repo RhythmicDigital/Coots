@@ -421,7 +421,7 @@ MonoBehaviour:
   _aimParent: {fileID: 3884134254795655031}
   _canBeGrappled:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1536
   _grappleController: {fileID: 3009141713868462320}
   _grabController: {fileID: 8229317383843811598}
 --- !u!114 &2162537684225880274
@@ -442,11 +442,20 @@ MonoBehaviour:
   m_AirControl: 0
   m_WhatIsGround:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 1792
   m_GroundCheck: {fileID: 2162537683100791680}
   m_CeilingCheck: {fileID: 2162537684163918234}
   m_CrouchDisableCollider: {fileID: 0}
   OnLandEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnJumpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnIdleEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMoveEvent:
     m_PersistentCalls:
       m_Calls: []
   OnCrouchEvent:
@@ -493,6 +502,10 @@ MonoBehaviour:
   - {fileID: 0}
   shootSprites:
   - {fileID: 0}
+  grapplingSprites: []
+  hurtSprites: []
+  crouchSprites: []
+  landSprites: []
 --- !u!1 &7002751685958876495
 GameObject:
   m_ObjectHideFlags: 0
