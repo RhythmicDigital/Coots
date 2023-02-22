@@ -93,6 +93,7 @@ class InputController : MonoBehaviour
 
     public void HandleFixedUpdate()
     {
+        if (_grappleController.Grappling) return;
         _characterController.Move(_xDir, _crouch, _jump);
     }
 }
