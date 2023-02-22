@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState {Playing, Paused}
 public class GameController : MonoBehaviour
@@ -9,15 +10,20 @@ public class GameController : MonoBehaviour
     [SerializeField] CharacterController2D characterController;
     [SerializeField] GrappleController grappleController;
     [SerializeField] GrabController grabController;
+    [SerializeField] CameraController cameraController;
+    [SerializeField] CharacterAnimator playerAnimator;
     [SerializeField] Camera worldCamera;
     [SerializeField] GameObject pauseScreen;
     [SerializeField] GameObject titleScreen;
     [SerializeField] GameObject deathScreen;
     [SerializeField] GameObject endScreen;
+    
     GameState state;
     GameState stateBeforePause;
 
     public static GameController i { get; private set; }
+
+    public CharacterAnimator PlayerAnimator => playerAnimator;
     
     // Start is called before the first frame update
     void Awake()
@@ -33,18 +39,25 @@ public class GameController : MonoBehaviour
             inputController.HandleUpdate();
             grappleController.HandleUpdate();
             grabController.HandleUpdate();
+            cameraController.HandleUpdate();
             
             if (Input.GetButtonDown("Pause"))
             {
                 PauseGame(true);
             }
         }
+
         else if (state == GameState.Paused)
         {
             if (Input.GetButtonDown("Pause"))
             {
                 PauseGame(false);
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -72,6 +85,8 @@ public class GameController : MonoBehaviour
 
             Physics.autoSimulation = false;
             Time.timeScale = 0;
+            
+            AudioManager.i.PlaySfx(SfxId.UIPause);
         }
         else
         {
@@ -80,6 +95,8 @@ public class GameController : MonoBehaviour
 
             Physics.autoSimulation = true;
             Time.timeScale = 1;
+
+            AudioManager.i.PlaySfx(SfxId.UIUnpause);
         }
     }
 }

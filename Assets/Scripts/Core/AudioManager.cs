@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
 
-public enum SfxId { Grapple }
+public enum SfxId { Shoot, Grappling, Ungrapple, UISelect, UIConfirm, UIPause, UIUnpause }
 public enum MusicId { Title, Gameplay }
 public class AudioManager : MonoBehaviour
 {
@@ -46,18 +46,37 @@ public class AudioManager : MonoBehaviour
         PlayMusic(audioData.clip);
     }
 
-    public void PlaySfx(AudioClip clip)
+    public void PlaySfx(AudioClip clip, bool loop=false)
     {
         if (clip == null) return;
+        if (!loop)
+        {
+            sfxPlayer.loop = false;
+            sfxPlayer.PlayOneShot(clip);
+        }
+        else
+        {
+            sfxPlayer.loop = true;
+            sfxPlayer.clip = clip;
+            sfxPlayer.Play();
+        }
+    }
+    public IEnumerator PlaySfxDelayed(AudioClip clip, float delay)
+    {
+        yield return new WaitForSeconds(delay);
         sfxPlayer.PlayOneShot(clip);
     }
+    public void StopSfx()
+    {
+        sfxPlayer.Stop();
+    }
 
-    public void PlaySfx(SfxId audioId)
+    public void PlaySfx(SfxId audioId, bool loop=false)
     {
         if (!sfxLookup.ContainsKey(audioId)) return;
 
         var audioData = sfxLookup[audioId];
-        PlaySfx(audioData.clip);
+        PlaySfx(audioData.clip, loop);
     }
 
     public void SetMusicVolume(float sliderValue)

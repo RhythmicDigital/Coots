@@ -3,21 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum FacingDirection { Right, Left }
-public enum CharacterState { Idle, Moving, Shooting, Grappling, Crouching }
 public class CharacterAnimator : MonoBehaviour
 {
     [SerializeField] List<Sprite> idleSprites;
     [SerializeField] List<Sprite> jumpSprites;
     [SerializeField] List<Sprite> walkRightSprites;
     [SerializeField] List<Sprite> shootSprites;
+     [SerializeField] List<Sprite> grapplingSprites;
+    [SerializeField] List<Sprite> hurtSprites;
+    [SerializeField] List<Sprite> crouchSprites;
 
     SpriteAnimator walkRightAnim;
     SpriteAnimator jumpAnim;
     SpriteAnimator shootAnim;
     SpriteAnimator idleAnim;
+    SpriteAnimator hurtAnim;
+    SpriteAnimator crouchAnim;
+    SpriteAnimator grapplingAnim;
     SpriteAnimator currentAnim;
     SpriteAnimator previousAnim;
+
     public CharacterState State { get; private set; }
+    CharacterState previousState;
 
     bool wasPreviouslyMoving;
 
@@ -31,20 +38,29 @@ public class CharacterAnimator : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
+    void Start() 
+    {
+        Init();
+    }
 
     public void Init()
     {
-        
-        idleAnim = new SpriteAnimator(idleSprites, spriteRenderer);
-        walkRightAnim = new SpriteAnimator(walkRightSprites, spriteRenderer);
-        shootAnim = new SpriteAnimator(shootSprites, spriteRenderer);
-        jumpAnim = new SpriteAnimator(jumpSprites, spriteRenderer);
+        SetPlaying(true);
+        float frameRate = GlobalSettings.i.FrameRate;
+        idleAnim = new SpriteAnimator(idleSprites, spriteRenderer, frameRate);
+        walkRightAnim = new SpriteAnimator(walkRightSprites, spriteRenderer, frameRate);
+        shootAnim = new SpriteAnimator(shootSprites, spriteRenderer, frameRate, false);
+        jumpAnim = new SpriteAnimator(jumpSprites, spriteRenderer, frameRate, false);
+        hurtAnim = new SpriteAnimator(hurtSprites, spriteRenderer, frameRate);
+        crouchAnim = new SpriteAnimator(crouchSprites, spriteRenderer, frameRate);
+        grapplingAnim = new SpriteAnimator(grapplingSprites, spriteRenderer, frameRate);
+
+        previousState = State;
 
         if (previousAnim != null)
             currentAnim = previousAnim;
         else
             currentAnim = idleAnim;
-    
     }
     
     private void Update()
@@ -57,13 +73,7 @@ public class CharacterAnimator : MonoBehaviour
             if (currentAnim != prevAnim || IsMoving != wasPreviouslyMoving)
                 currentAnim.Start();
 
-            if (IsMoving)
-                currentAnim.HandleUpdate();
-            else
-                if (currentAnim.Frames.Count > 2)
-                    spriteRenderer.sprite = currentAnim.Frames[1];
-                else
-                    spriteRenderer.sprite = null;
+            currentAnim.HandleUpdate();                
 
             previousAnim = currentAnim;
             wasPreviouslyMoving = IsMoving;
@@ -79,5 +89,88 @@ public class CharacterAnimator : MonoBehaviour
     public void SetPlaying(bool playing) 
     {
         IsPlaying = playing;
+    }
+
+    public void SetState(CharacterState state)
+    {
+        previousState = State;
+        State = state;
+
+        switch (state)
+        {
+            case CharacterState.Idle:
+                currentAnim = idleAnim;
+                break;
+            case CharacterState.Grappling:
+                currentAnim = grapplingAnim;
+                break;
+            case CharacterState.Shooting:
+                currentAnim = shootAnim;
+                break;
+            case CharacterState.Moving:
+                currentAnim = walkRightAnim;
+                break;
+            case CharacterState.Crouching:
+                currentAnim = crouchAnim;
+                break;
+            case CharacterState.Jumping:
+                currentAnim = jumpAnim;
+                break;
+        }
+        currentAnim.Start();
+    }
+    
+    public void OnCrouch(bool crouch)
+    {
+        if (crouch)
+            SetState(CharacterState.Crouching);
+        else
+            SetState(previousState);
+    }
+
+    public void OnMove()
+    {
+        SetState(CharacterState.Moving);
+    }
+
+    public void OnJump()
+    {
+        SetState(CharacterState.Jumping);
+    }
+
+    public void OnIdle()
+    {
+        SetState(CharacterState.Idle);
+    }
+
+    public void OnLand() 
+    {
+        Debug.Log("Landed");
+        SetState(CharacterState.Idle);
+    }
+
+    public void SetState(string state)
+    {
+        switch (state.ToLower())
+        {
+            case "idle":
+                SetState(CharacterState.Idle);
+                break;
+            case "grappling":
+                SetState(CharacterState.Grappling);
+                break;
+            case "shooting":
+                SetState(CharacterState.Shooting);
+                break;
+            case "moving":
+                SetState(CharacterState.Moving);
+                break;
+            case "crouching":
+                SetState(CharacterState.Crouching);
+                break;
+            case "jumping":
+                SetState(CharacterState.Jumping);
+                break;
+        }
     }
 }

@@ -59,6 +59,7 @@ class InputController : MonoBehaviour
         {
             _grappleController.Disconnect();
             _grabController.Disconnect();
+
             return;
         }
         if (_grappleController.Grappling || _grabController.Grabbing) return;
@@ -73,10 +74,16 @@ class InputController : MonoBehaviour
         if (grappleObj == null || grappleObj.Interaction == GrappleObject.GrappleInteraction.Connect)
         {
             _grappleController.ConnectToPoint(hit.point);
+
+            GameController.i.PlayerAnimator.SetState(CharacterState.Shooting);
+            AudioManager.i.PlaySfx(SfxId.Shoot);
         }
         else if (grappleObj.Interaction == GrappleObject.GrappleInteraction.Pull)
         {
             _grabController.ConnectToItem(hit);
+
+            GameController.i.PlayerAnimator.SetState(CharacterState.Shooting);
+            AudioManager.i.PlaySfx(SfxId.Shoot);
         }
         else
         {

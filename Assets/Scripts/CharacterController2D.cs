@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 // From: https://github.com/Brackeys/2D-Character-Controller
 
+public enum CharacterState { Idle, Moving, Shooting, Grappling, Crouching, Jumping }
+
 public class CharacterController2D : MonoBehaviour
 {
     [SerializeField] private float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
@@ -25,16 +27,24 @@ public class CharacterController2D : MonoBehaviour
 
     private float m_lastJump;
 
+    public CharacterState State { get; private set; }
+
     [Header("Events")]
     [Space]
 
     public UnityEvent OnLandEvent;
+    public UnityEvent OnJumpEvent;
+    public UnityEvent OnIdleEvent;
+    public UnityEvent OnMoveEvent;
 
     [System.Serializable]
     public class BoolEvent : UnityEvent<bool> { }
 
     public BoolEvent OnCrouchEvent;
     private bool m_wasCrouching = false;
+    private bool m_wasMoving = false;
+    private bool m_wasGrounded = false;
+    private bool m_Moving;
 
     private void Awake()
     {
@@ -52,6 +62,8 @@ public class CharacterController2D : MonoBehaviour
         _airMaterial.friction = 0;
     }
 
+    private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
     public void HandleFixedUpdate()
     {
         bool wasGrounded = m_Grounded;
@@ -65,25 +77,37 @@ public class CharacterController2D : MonoBehaviour
             if (colliders[i].gameObject != gameObject)
             {
                 m_Grounded = true;
+                if (stopwatch.ElapsedMilliseconds > (long)60)
+                    OnLandEvent.Invoke();
+                stopwatch.Reset();
                 break;
             }
         }
+        if (!m_Grounded)
+            stopwatch.Start();
 
         if (m_Grounded != wasGrounded)
         {
             if (!wasGrounded)
             {
-                OnLandEvent.Invoke();
                 // 1 frame jumps can mess stuff up
                 m_lastJump = Time.fixedTime;
             }
             m_Rigidbody2D.sharedMaterial = m_Grounded ? _groundMaterial : _airMaterial;
+        }
+
+        if (!m_Grounded)
+        {
+            m_Rigidbody2D.AddForce(new Vector2(0, GlobalSettings.i.Gravity));
         }
     }
 
 
     public void Move(float move, bool crouch, bool jump)
     {
+        m_wasMoving = m_Moving;
+        m_Moving = false;
+
         // If crouching, check to see if the character can stand up
         if (!crouch)
         {
@@ -97,7 +121,7 @@ public class CharacterController2D : MonoBehaviour
         //only control the player if grounded or airControl is turned on
         if (m_Grounded || m_AirControl)
         {
-
+            
             // If crouching
             if (crouch)
             {
@@ -131,7 +155,7 @@ public class CharacterController2D : MonoBehaviour
             Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
             // And then smoothing it out and applying it to the character
             m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-
+            
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !m_FacingRight)
             {
@@ -152,6 +176,19 @@ public class CharacterController2D : MonoBehaviour
             // Add a vertical force to the player.
             m_Grounded = false;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            OnJumpEvent.Invoke();
+        }
+
+        if (Mathf.Abs(move) > 0)  
+        { 
+            m_Moving = true;
+            if (m_Moving != m_wasMoving && !crouch && !jump)
+                OnMoveEvent.Invoke();
+        }
+
+        if (Mathf.Abs(move) == 0 && m_Moving != m_wasMoving && !crouch && !jump)
+        {
+            OnIdleEvent.Invoke();
         }
     }
 

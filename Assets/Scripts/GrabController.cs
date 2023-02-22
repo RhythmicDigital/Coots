@@ -50,7 +50,6 @@ public class GrabController : MonoBehaviour
         _connected = false;
     }
 
-
     public void HandleUpdate()
     {
         if (!_connected) return;
@@ -66,6 +65,10 @@ public class GrabController : MonoBehaviour
         if (_distance <= 1)
         {
             Disconnect();
+
+            AudioManager.i.StopSfx();
+            AudioManager.i.PlaySfx(SfxId.Ungrapple);
+
             return;
         }
 

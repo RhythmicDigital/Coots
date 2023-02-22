@@ -16,16 +16,19 @@ public class SpriteAnimator
     public float FrameRate => frameRate;
     public List<Sprite> Frames => frames;
     public SpriteRenderer SpriteRenderer => spriteRenderer;
+    public bool Looping => looping;
 
-    public SpriteAnimator(List<Sprite> frames, SpriteRenderer spriteRenderer, float frameRate = 0.08f)
+    public SpriteAnimator(List<Sprite> frames, SpriteRenderer spriteRenderer, float frameRate=0.08f, bool looping=true)
     {
         this.frames = frames;
         this.spriteRenderer = spriteRenderer;
         this.frameRate = frameRate;
+        this.looping = looping;
     }
 
     public void Start()
     {
+        SetState(AnimState.Playing);
         currentFrame = 0;
         timer = 0f;
         spriteRenderer.sprite = frames[0];
@@ -47,17 +50,17 @@ public class SpriteAnimator
         timer += Time.deltaTime;
         if (timer > frameRate)
         {
-            if (currentFrame + 1 >= frames.Count)
+            if (currentFrame + 1 >= frames.Count && !looping)
             {
-                if (!looping)
-                {
-                    SetState(AnimState.Paused);
-                }
+                SetState(AnimState.Paused);
+                
             }
-            currentFrame = (currentFrame + 1) % frames.Count;
-            spriteRenderer.sprite = frames[currentFrame];
-            timer -= frameRate;
-            
+            else 
+            {
+                currentFrame = (currentFrame + 1) % frames.Count;
+                spriteRenderer.sprite = frames[currentFrame];
+                timer -= frameRate;
+            }
         }
     }
     void HandlePausedUpdate()
@@ -67,7 +70,7 @@ public class SpriteAnimator
     {
         this.looping = looping;
     }
-    
+
     public void SetState(AnimState State)
     {
         this.State = State;

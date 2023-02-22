@@ -54,6 +54,9 @@ public class GrappleController : MonoBehaviour
         _ropeJoint.enabled = false;
         _lr.enabled = false;
         _connected = false;
+
+        AudioManager.i.StopSfx();
+        AudioManager.i.PlaySfx(SfxId.Ungrapple);
     }
 
     private void Awake()
