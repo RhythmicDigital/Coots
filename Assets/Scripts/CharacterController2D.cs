@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 // From: https://github.com/Brackeys/2D-Character-Controller
 
-public enum CharacterState { Idle, Moving, Shooting, Grappling, Crouching, Jumping }
+public enum CharacterState { Idle, Moving, Shooting, Grappling, Crouching, Jumping, Landing }
 
 public class CharacterController2D : MonoBehaviour
 {
@@ -43,7 +43,6 @@ public class CharacterController2D : MonoBehaviour
     public BoolEvent OnCrouchEvent;
     private bool m_wasCrouching = false;
     private bool m_wasMoving = false;
-    private bool m_wasGrounded = false;
     private bool m_Moving;
 
     private void Awake()

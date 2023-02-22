@@ -9,9 +9,10 @@ public class CharacterAnimator : MonoBehaviour
     [SerializeField] List<Sprite> jumpSprites;
     [SerializeField] List<Sprite> walkRightSprites;
     [SerializeField] List<Sprite> shootSprites;
-     [SerializeField] List<Sprite> grapplingSprites;
+    [SerializeField] List<Sprite> grapplingSprites;
     [SerializeField] List<Sprite> hurtSprites;
     [SerializeField] List<Sprite> crouchSprites;
+    [SerializeField] List<Sprite> landSprites;
 
     SpriteAnimator walkRightAnim;
     SpriteAnimator jumpAnim;
@@ -22,6 +23,7 @@ public class CharacterAnimator : MonoBehaviour
     SpriteAnimator grapplingAnim;
     SpriteAnimator currentAnim;
     SpriteAnimator previousAnim;
+    SpriteAnimator landAnim;
 
     public CharacterState State { get; private set; }
     CharacterState previousState;
@@ -54,6 +56,7 @@ public class CharacterAnimator : MonoBehaviour
         hurtAnim = new SpriteAnimator(hurtSprites, spriteRenderer, frameRate);
         crouchAnim = new SpriteAnimator(crouchSprites, spriteRenderer, frameRate);
         grapplingAnim = new SpriteAnimator(grapplingSprites, spriteRenderer, frameRate);
+        landAnim = new SpriteAnimator(landSprites, spriteRenderer, frameRate);
 
         previousState = State;
 
@@ -78,7 +81,6 @@ public class CharacterAnimator : MonoBehaviour
             previousAnim = currentAnim;
             wasPreviouslyMoving = IsMoving;
         }
-        
     }
 
     public void SetFacingDirection(FacingDirection dir)
@@ -116,6 +118,9 @@ public class CharacterAnimator : MonoBehaviour
             case CharacterState.Jumping:
                 currentAnim = jumpAnim;
                 break;
+            case CharacterState.Landing:
+                currentAnim = jumpAnim;
+                break;
         }
         currentAnim.Start();
     }
@@ -145,7 +150,6 @@ public class CharacterAnimator : MonoBehaviour
 
     public void OnLand() 
     {
-        Debug.Log("Landed");
         SetState(CharacterState.Idle);
     }
 
@@ -170,6 +174,9 @@ public class CharacterAnimator : MonoBehaviour
                 break;
             case "jumping":
                 SetState(CharacterState.Jumping);
+                break;
+            case "landing":
+                SetState(CharacterState.Landing);
                 break;
         }
     }

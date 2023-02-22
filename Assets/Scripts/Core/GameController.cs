@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     [SerializeField] GrabController grabController;
     [SerializeField] CameraController cameraController;
     [SerializeField] CharacterAnimator playerAnimator;
+    [SerializeField] GameObject player;
     [SerializeField] Camera worldCamera;
     [SerializeField] GameObject pauseScreen;
     [SerializeField] GameObject titleScreen;
@@ -24,6 +25,7 @@ public class GameController : MonoBehaviour
     public static GameController i { get; private set; }
 
     public CharacterAnimator PlayerAnimator => playerAnimator;
+    public GameObject Player => player;
     
     // Start is called before the first frame update
     void Awake()
