@@ -28,6 +28,9 @@ public class CharacterController2D : MonoBehaviour
     private float m_TimeSinceGrounded, m_TimeSinceJumping;
 
     public CharacterState State { get; private set; }
+    public bool Grounded => m_Grounded;
+
+    public static Vector2 FixedPosition { get; private set; }
 
     [Header("Events")]
     [Space]
@@ -98,6 +101,8 @@ public class CharacterController2D : MonoBehaviour
             if (m_Rigidbody2D.velocity.y < GlobalSettings.i.MaxFallVelocity)
                 m_Rigidbody2D.velocity = new Vector3(m_Rigidbody2D.velocity.x, GlobalSettings.i.MaxFallVelocity, 0);
         }
+
+        FixedPosition = transform.position;
     }
 
 

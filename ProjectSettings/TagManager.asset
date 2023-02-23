@@ -19,6 +19,8 @@ TagManager:
   - CanBeGrappled
   - Wall
   - Player
+  - 
+  - OneWayPlatform
   - Harmful
   - Healing
   - 

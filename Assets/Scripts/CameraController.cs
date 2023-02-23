@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float smoothTime = .5f;
     [SerializeField] float minZoom = 40f;
     [SerializeField] float maxZoom = 10f;
-    [SerializeField] float zoomLimiter = 50f;  
+    [SerializeField] float zoomLimiter = 50f;
     [SerializeField] float shakeAmount = 0.1f;
     [SerializeField] float shakeDuration = 1;
     [SerializeField] int shakeVibrato = 1;
@@ -20,7 +20,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float depth = -10;
     [SerializeField] bool lockYAxis;
     [SerializeField] bool lockXAxis;
-    
+
     Vector3 velocity;
     Camera cam;
     CameraState state;
@@ -29,12 +29,12 @@ public class CameraController : MonoBehaviour
 
     public CameraState State => state;
 
-    void Awake() 
+    void Awake()
     {
         i = this;
     }
-    
-    void Start() 
+
+    void Start()
     {
         Init();
     }
@@ -53,7 +53,7 @@ public class CameraController : MonoBehaviour
         yield return null;
     }
 
-    public void SetState(CameraState state) 
+    public void SetState(CameraState state)
     {
         this.state = state;
         if (state == CameraState.Fixed)
@@ -127,13 +127,13 @@ public class CameraController : MonoBehaviour
         }
         return bounds.size.x;
     }
-    
+
     void Move()
     {
         Vector3 centerPoint = GetCenterPoint();
         Vector3 newPosition = centerPoint + offset;
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref velocity, smoothTime);
-    } 
+    }
 
     Vector3 GetCenterPoint()
     {
@@ -143,7 +143,7 @@ public class CameraController : MonoBehaviour
         }
 
         var bounds = new Bounds(targets[0].position, Vector3.zero);
-        
+
         for (int i = 0; i < targets.Count; i++)
         {
             bounds.Encapsulate(targets[i].position);

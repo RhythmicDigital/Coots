@@ -2306,6 +2306,9 @@ MonoBehaviour:
   characterController: {fileID: 4434477019500901878}
   grappleController: {fileID: 741426771054206420}
   grabController: {fileID: 5889834497370952746}
+  cameraController: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  player: {fileID: 0}
   worldCamera: {fileID: 2560452288737678879}
   pauseScreen: {fileID: 562082957}
   titleScreen: {fileID: 981638606}
