@@ -442,7 +442,7 @@ MonoBehaviour:
   m_AirControl: 0
   m_WhatIsGround:
     serializedVersion: 2
-    m_Bits: 1792
+    m_Bits: 9984
   m_GroundCheck: {fileID: 2162537683100791680}
   m_CeilingCheck: {fileID: 2162537684163918234}
   m_CrouchDisableCollider: {fileID: 0}
@@ -478,9 +478,9 @@ Rigidbody2D:
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 00c335fc62e12094a97d2a6e490b3605, type: 2}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_Interpolate: 1
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &-4864724601367213608
 MonoBehaviour:

@@ -28,6 +28,7 @@ public class CharacterController2D : MonoBehaviour
     private float m_TimeSinceGrounded, m_TimeSinceJumping;
 
     public CharacterState State { get; private set; }
+    public static Vector2 FixedPosition { get; private set; }
 
     [Header("Events")]
     [Space]
@@ -96,6 +97,8 @@ public class CharacterController2D : MonoBehaviour
             m_TimeSinceGrounded += Time.fixedDeltaTime;
             m_Rigidbody2D.AddForce(new Vector2(0, GlobalSettings.i.Gravity));
         }
+
+        FixedPosition = transform.position;
     }
 
 
