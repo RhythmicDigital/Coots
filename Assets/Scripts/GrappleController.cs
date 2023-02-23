@@ -5,6 +5,9 @@ using UnityEngine;
 public class GrappleController : MonoBehaviour
 {
     [SerializeField]
+    private Rigidbody2D _rigidbody;
+
+    [SerializeField]
     private LayerMask _ropeLayerMask;
 
     [SerializeField]
@@ -59,9 +62,14 @@ public class GrappleController : MonoBehaviour
         _ropeJoint.enabled = false;
         _lr.enabled = false;
         _connected = false;
-
+        
         AudioManager.i.StopSfx();
         AudioManager.i.PlaySfx(SfxId.Ungrapple);
+
+        Vector2 ungrappleForce = Vector2.zero;
+        if (_connected)
+            ungrappleForce = (_anchorPosition.transform.position - _rigidbody.transform.position).normalized * GlobalSettings.i.UngrappleFlySpeed;
+        _rigidbody.AddForce(ungrappleForce);
     }
 
     private void Awake()
@@ -77,11 +85,13 @@ public class GrappleController : MonoBehaviour
     public void HandleUpdate()
     {
         if (!_connected) return;
-
+        
+        if (_connectedTo.gameObject.GetComponent<Entity>())
+            if (_connectedTo.gameObject.GetComponent<Entity>().State == EntityState.Inactive) Disconnect();
 
         if (_maxDistance - _currentDistance > 1)
         {
-            _maxDistance = Mathf.MoveTowards(_maxDistance, _currentDistance + 1, Time.deltaTime * 15);
+            _maxDistance = Mathf.MoveTowards(_maxDistance, _currentDistance + 1, Time.deltaTime * GlobalSettings.i.GrappleSpeed);
         }
 
         var connectedToPos = _connectedTo.TransformPoint(_connectedToOffset);

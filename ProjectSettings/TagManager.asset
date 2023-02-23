@@ -17,10 +17,10 @@ TagManager:
   - 
   - Ground
   - CanBeGrappled
-  - GrappleNoWrap
+  - Wall
   - Player
-  - 
-  - 
+  - Harmful
+  - Healing
   - 
   - 
   - 

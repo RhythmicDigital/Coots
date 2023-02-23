@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
+using System.Linq;
+using TMPro;
 
-public enum GameState {Playing, Paused}
+public enum GameState { Playing, Paused, End, TitleScreen }
 public class GameController : MonoBehaviour
 {
+    [SerializeField] Boss boss;
     [SerializeField] InputController inputController;
     [SerializeField] CharacterController2D characterController;
     [SerializeField] GrappleController grappleController;
@@ -18,14 +22,20 @@ public class GameController : MonoBehaviour
     [SerializeField] GameObject titleScreen;
     [SerializeField] GameObject deathScreen;
     [SerializeField] GameObject endScreen;
+    [SerializeField] TMP_Text timerText;
+    [SerializeField] List<GameObject> healthImages;
     
     GameState state;
     GameState stateBeforePause;
+
+    float timer;
 
     public static GameController i { get; private set; }
 
     public CharacterAnimator PlayerAnimator => playerAnimator;
     public GameObject Player => player;
+    public CameraController CameraController => cameraController;
+    public Boss Boss => boss;
     
     // Start is called before the first frame update
     void Awake()
@@ -42,6 +52,8 @@ public class GameController : MonoBehaviour
             grappleController.HandleUpdate();
             grabController.HandleUpdate();
             cameraController.HandleUpdate();
+            boss.HandleUpdate();
+            player.GetComponent<CharacterHealth>().HandleUpdate();
             
             if (Input.GetButtonDown("Pause"))
             {
@@ -100,5 +112,43 @@ public class GameController : MonoBehaviour
 
             AudioManager.i.PlaySfx(SfxId.UIUnpause);
         }
+    }
+
+    public void EndGame()
+    {
+        endScreen.SetActive(true);
+        SetState(GameState.End);
+    }
+
+    public void SetState(GameState state)
+    {
+        this.state = state;
+    }
+
+    public void SetPlayerHealth(float health)
+    {
+        foreach(GameObject image in healthImages) image.SetActive(false);
+        
+        healthImages.ElementAt((int)health).SetActive(true);
+    }
+
+    public void ResetTimer()
+    {
+        timer = 0;
+    }
+
+    public void HandleTimerUpdate()
+    {
+        timer += Time.deltaTime;
+    }
+
+    void SetTimerText(string text)
+    {
+        timerText.text = text;
+    }
+
+    public void OnDeath()
+    {
+        deathScreen.SetActive(true);
     }
 }

@@ -39,7 +39,7 @@ public class CameraController : MonoBehaviour
         Init();
     }
 
-    public void MoveCamera()
+    public IEnumerator MoveCamera()
     {
         Vector3 targetPos = new Vector3(player.position.x, player.position.y, depth);
 
@@ -50,6 +50,7 @@ public class CameraController : MonoBehaviour
             targetPos.y = transform.position.y;
 
         transform.position = Vector3.Lerp(transform.position, targetPos, cameraMoveSpeed * Time.deltaTime);
+        yield return null;
     }
 
     public void SetState(CameraState state) 
@@ -86,7 +87,7 @@ public class CameraController : MonoBehaviour
         {
             if (targets.Count == 0) return;
             
-            else if (targets.Count == 1) MoveCamera();
+            else if (targets.Count == 1) StartCoroutine(MoveCamera());
             
             else if (targets.Count > 1)
             {

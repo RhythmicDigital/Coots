@@ -95,6 +95,8 @@ public class CharacterController2D : MonoBehaviour
         {
             m_TimeSinceGrounded += Time.fixedDeltaTime;
             m_Rigidbody2D.AddForce(new Vector2(0, GlobalSettings.i.Gravity));
+            if (m_Rigidbody2D.velocity.y < GlobalSettings.i.MaxFallVelocity)
+                m_Rigidbody2D.velocity = new Vector3(m_Rigidbody2D.velocity.x, GlobalSettings.i.MaxFallVelocity, 0);
         }
     }
 
@@ -192,8 +194,8 @@ public class CharacterController2D : MonoBehaviour
             if (m_Moving != m_wasMoving && !crouch && !jump)
                 OnMoveEvent.Invoke();
         }
-
-        if (Mathf.Abs(move) == 0 && m_Moving != m_wasMoving && !crouch && !jump)
+        
+        else if (Mathf.Abs(move) == 0 && m_Moving != m_wasMoving && !crouch && !jump)
         {
             OnIdleEvent.Invoke();
         }

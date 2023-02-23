@@ -93,9 +93,9 @@ public class Entity : MonoBehaviour
         transform.position = position;
     }
 
-    public void SetRotation(Quaternion rotation)
+    public void SetRotation(float rotation)
     {
-        transform.rotation = rotation;
+        transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, rotation);
     }
 
     void MoveEntity()
