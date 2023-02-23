@@ -25,7 +25,7 @@ public class CharacterController2D : MonoBehaviour
 
     private PhysicsMaterial2D _groundMaterial, _airMaterial;
 
-    private float m_lastJump;
+    private float m_TimeSinceGrounded, m_TimeSinceJumping;
 
     public CharacterState State { get; private set; }
 
@@ -61,12 +61,11 @@ public class CharacterController2D : MonoBehaviour
         _airMaterial.friction = 0;
     }
 
-    private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-
     public void HandleFixedUpdate()
     {
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
+        m_TimeSinceJumping += Time.fixedDeltaTime;
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
@@ -76,27 +75,25 @@ public class CharacterController2D : MonoBehaviour
             if (colliders[i].gameObject != gameObject)
             {
                 m_Grounded = true;
-                if (stopwatch.ElapsedMilliseconds > (long)60)
+                if (m_TimeSinceGrounded > 0.006)
                     OnLandEvent.Invoke();
-                stopwatch.Reset();
                 break;
             }
         }
-        if (!m_Grounded)
-            stopwatch.Start();
+
 
         if (m_Grounded != wasGrounded)
         {
-            if (!wasGrounded)
-            {
-                // 1 frame jumps can mess stuff up
-                m_lastJump = Time.fixedTime;
-            }
             m_Rigidbody2D.sharedMaterial = m_Grounded ? _groundMaterial : _airMaterial;
         }
 
-        if (!m_Grounded)
+        if (m_Grounded)
         {
+            m_TimeSinceGrounded = 0;
+        }
+        else
+        {
+            m_TimeSinceGrounded += Time.fixedDeltaTime;
             m_Rigidbody2D.AddForce(new Vector2(0, GlobalSettings.i.Gravity));
         }
     }
@@ -180,11 +177,11 @@ public class CharacterController2D : MonoBehaviour
         }
 
         // If the player should jump...
-        if (m_Grounded && jump && m_lastJump + 0.1f < Time.fixedTime)
+        if (m_Grounded && jump && m_TimeSinceJumping > 0.1f)
         {
-            m_lastJump = Time.fixedTime;
             // Add a vertical force to the player.
             m_Grounded = false;
+            m_TimeSinceJumping = 0;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
             OnJumpEvent.Invoke();
         }
