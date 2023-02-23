@@ -28,6 +28,8 @@ public class CharacterController2D : MonoBehaviour
     private float m_TimeSinceGrounded, m_TimeSinceJumping;
 
     public CharacterState State { get; private set; }
+    public bool Grounded => m_Grounded;
+
     public static Vector2 FixedPosition { get; private set; }
 
     [Header("Events")]

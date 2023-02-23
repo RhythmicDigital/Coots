@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum GameState {Playing, Paused}
+public enum GameState { Playing, Paused, PreGame, Win, Loss }
 public class GameController : MonoBehaviour
 {
     [SerializeField] InputController inputController;
@@ -14,11 +14,12 @@ public class GameController : MonoBehaviour
     [SerializeField] CharacterAnimator playerAnimator;
     [SerializeField] GameObject player;
     [SerializeField] Camera worldCamera;
+
     [SerializeField] GameObject pauseScreen;
     [SerializeField] GameObject titleScreen;
     [SerializeField] GameObject deathScreen;
     [SerializeField] GameObject endScreen;
-    
+
     GameState state;
     GameState stateBeforePause;
 
@@ -26,11 +27,12 @@ public class GameController : MonoBehaviour
 
     public CharacterAnimator PlayerAnimator => playerAnimator;
     public GameObject Player => player;
-    
+
     // Start is called before the first frame update
     void Awake()
     {
-        i = this; 
+        i = this;
+        PauseGame(false);
     }
 
     // Update is called once per frame
@@ -42,7 +44,7 @@ public class GameController : MonoBehaviour
             grappleController.HandleUpdate();
             grabController.HandleUpdate();
             cameraController.HandleUpdate();
-            
+
             if (Input.GetButtonDown("Pause"))
             {
                 PauseGame(true);
@@ -63,7 +65,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
         if (state == GameState.Playing)
         {
@@ -79,26 +81,45 @@ public class GameController : MonoBehaviour
 
     public void PauseGame(bool pause)
     {
+        if (pause != (state != GameState.Paused))
+        {
+            return;
+        }
+
         if (pause)
         {
             stateBeforePause = state;
-            pauseScreen.SetActive(true);
-            state = GameState.Paused;
-
-            Physics.autoSimulation = false;
-            Time.timeScale = 0;
-            
+            SetState(GameState.Paused);
             AudioManager.i.PlaySfx(SfxId.UIPause);
         }
         else
         {
-            pauseScreen.SetActive(false);
-            state = stateBeforePause;
-
-            Physics.autoSimulation = true;
-            Time.timeScale = 1;
-
+            SetState(stateBeforePause);
             AudioManager.i.PlaySfx(SfxId.UIUnpause);
         }
+    }
+
+    public void WinGame() => SetState(GameState.Win);
+
+    private void SetState(GameState newState)
+    {
+        if (state == newState) return;
+
+        if (state == GameState.Playing)
+        {
+            Physics.autoSimulation = true;
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Physics.autoSimulation = false;
+            Time.timeScale = 0;
+        }
+
+        pauseScreen.SetActive(newState == GameState.Paused);
+        titleScreen.SetActive(newState == GameState.PreGame);
+        endScreen.SetActive(newState == GameState.Win);
+        deathScreen.SetActive(newState == GameState.Loss);
+
     }
 }
