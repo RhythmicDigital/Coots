@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public enum ShootType { Single, Circle }
 public class ProjectileShooter : MonoBehaviour
@@ -18,6 +19,8 @@ public class ProjectileShooter : MonoBehaviour
 
     float timeSinceLastShot = 0;
     int currentProjectileIndex;
+
+    public event Action OnShoot;
 
     void Update() 
     {
@@ -40,6 +43,7 @@ public class ProjectileShooter : MonoBehaviour
                         ShootCircle(GetCurrentProjectileName());
                         break;
                 }
+                OnShoot?.Invoke();
                 timeSinceLastShot = 0;
             }
         }
@@ -92,5 +96,6 @@ public class ProjectileShooter : MonoBehaviour
     public void MoveToNextProjectile()
     {
         currentProjectileIndex++;
+        if (currentProjectileIndex >= projectileNames.Count()) currentProjectileIndex = 0;
     }
 }

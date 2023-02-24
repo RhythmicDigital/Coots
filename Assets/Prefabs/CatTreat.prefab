@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4301218190146111341}
   - component: {fileID: 4301218190146111340}
   - component: {fileID: 4301218190146111343}
-  m_Layer: 13
+  m_Layer: 15
   m_Name: CatTreat
   m_TagString: Untagged
   m_Icon: {fileID: 0}

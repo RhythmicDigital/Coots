@@ -9,9 +9,9 @@ public class CharacterHealth : MonoBehaviour
     [SerializeField] LayerMask harmfulLayers;
     [SerializeField] LayerMask healingLayers;
     [SerializeField] float invincibleTime = 1;
+    [SerializeField] SpriteRenderer renderer;
 
     float invincibleTimer;
-    SpriteRenderer renderer;
     
     void Start() 
     {
@@ -63,7 +63,7 @@ public class CharacterHealth : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider) 
     {
-        if (harmfulLayers == (harmfulLayers | (1 << collider.gameObject.layer)));
+        if ((harmfulLayers & (1 << collider.gameObject.layer)) != 0)
         {
             if (invincibleTimer >= invincibleTime)
             {
@@ -72,7 +72,7 @@ public class CharacterHealth : MonoBehaviour
             }
         }
 
-        if (healingLayers == (healingLayers | (1 << collider.gameObject.layer)));
+        else if ((healingLayers & (1 << collider.gameObject.layer)) != 0)
         {
             AddHealth();
         }

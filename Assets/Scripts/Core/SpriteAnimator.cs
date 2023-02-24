@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum AnimState { Playing, Paused }
 public class SpriteAnimator
@@ -17,6 +18,7 @@ public class SpriteAnimator
     public List<Sprite> Frames => frames;
     public SpriteRenderer SpriteRenderer => spriteRenderer;
     public bool Looping => looping;
+    public event Action OnEnd;
 
     public SpriteAnimator(List<Sprite> frames, SpriteRenderer spriteRenderer, float frameRate=0.08f, bool looping=true)
     {
@@ -53,7 +55,7 @@ public class SpriteAnimator
             if (currentFrame + 1 >= frames.Count && !looping)
             {
                 SetState(AnimState.Paused);
-                
+                OnEnd?.Invoke();
             }
             else 
             {

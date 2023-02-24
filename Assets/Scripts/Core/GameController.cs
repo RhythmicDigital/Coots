@@ -18,6 +18,8 @@ public class GameController : MonoBehaviour
     [SerializeField] CharacterAnimator playerAnimator;
     [SerializeField] GameObject player;
     [SerializeField] Camera worldCamera;
+    [SerializeField] List<GameObject> healthImages;
+    [SerializeField] TMP_Text timerText;
 
     [SerializeField] GameObject pauseScreen;
     [SerializeField] GameObject titleScreen;
@@ -33,6 +35,8 @@ public class GameController : MonoBehaviour
 
     public CharacterAnimator PlayerAnimator => playerAnimator;
     public GameObject Player => player;
+    public Boss Boss => boss;
+    public CameraController CameraController => cameraController;
     
     // Start is called before the first frame update
     void Awake()
@@ -50,6 +54,7 @@ public class GameController : MonoBehaviour
             grappleController.HandleUpdate();
             grabController.HandleUpdate();
             cameraController.HandleUpdate();
+            player.GetComponent<CharacterHealth>().HandleUpdate();
             
             if (Input.GetButtonDown("Pause"))
             {
@@ -132,12 +137,7 @@ public class GameController : MonoBehaviour
     public void EndGame()
     {
         endScreen.SetActive(true);
-        SetState(GameState.End);
-    }
-
-    public void SetState(GameState state)
-    {
-        this.state = state;
+        SetState(GameState.Win);
     }
 
     public void SetPlayerHealth(float health)
@@ -165,5 +165,6 @@ public class GameController : MonoBehaviour
     public void OnDeath()
     {
         deathScreen.SetActive(true);
+        SetState(GameState.Loss);
     }
 }

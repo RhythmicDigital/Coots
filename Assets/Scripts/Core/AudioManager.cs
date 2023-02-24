@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
 
-public enum SfxId { Shoot, Grappling, Ungrapple, UISelect, UIConfirm, UIPause, UIUnpause }
+public enum SfxId { Shoot, Grappling, Ungrapple, UISelect, UIConfirm, UIPause, UIUnpause, BossShoot }
 public enum MusicId { Title, Gameplay }
 public class AudioManager : MonoBehaviour
 {

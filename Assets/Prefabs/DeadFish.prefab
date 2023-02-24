@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3257938548718877008}
   - component: {fileID: 3257938548718877011}
   - component: {fileID: 3257938548718877014}
-  m_Layer: 12
+  m_Layer: 14
   m_Name: DeadFish
   m_TagString: Untagged
   m_Icon: {fileID: 0}

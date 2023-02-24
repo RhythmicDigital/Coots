@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum FacingDirection { Right, Left }
 public class CharacterAnimator : MonoBehaviour
@@ -35,6 +36,7 @@ public class CharacterAnimator : MonoBehaviour
     public bool IsMoving { get; set; }
     public bool IsPlaying { get; private set; }
     public FacingDirection FacingDirection { get; private set; }
+    public SpriteAnimator ShootAnim => shootAnim;
 
     private void Awake()
     {

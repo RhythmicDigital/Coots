@@ -8,6 +8,7 @@ public class GlobalSettings : MonoBehaviour
     public float Gravity = -10;
     public float GrappleSpeed = 15;
     public float UngrappleFlySpeed = 1000;
+    public float MaxVelocity = 30;
     public float BoostSpeed = 2000;
     public float FrameRate = 0.16f;
     public static GlobalSettings i;

@@ -12,7 +12,11 @@ public class CatTreat : Entity
         if (collider.CompareTag("Player"))
         {
             var boostForce = (transform.position - collider.transform.position).normalized * GlobalSettings.i.BoostSpeed;
-            collider.GetComponent<Rigidbody2D>().AddForce(boostForce);
+            Rigidbody2D rb = collider.GetComponent<Rigidbody2D>();
+            
+            if (Vector3.Magnitude (rb.velocity) < GlobalSettings.i.MaxVelocity)
+                rb.AddForce(boostForce);
+            
             SetActive(false);
         }
     }
