@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
+
 public class CharacterHealth : MonoBehaviour
 {
+    [SerializeField] CharacterAnimator animator;
     [SerializeField] float maxHealth = 3;
     [SerializeField] float currentHealth;
     [SerializeField] LayerMask harmfulLayers;
@@ -13,6 +16,10 @@ public class CharacterHealth : MonoBehaviour
 
     float invincibleTimer;
     
+    public event Action OnDeath;
+    public event Action OnHurt;
+    public event Action OnHeal;
+
     void Start() 
     {
         Init();
@@ -22,6 +29,24 @@ public class CharacterHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
         GameController.i.SetPlayerHealth(currentHealth);
+
+        animator.HurtAnim.OnEnd += () => { animator.SetState(animator.PreviousState); };
+        
+        OnHurt += () => {
+            HurtSprite();
+            animator.SetState(CharacterState.Hurt);
+            if (gameObject.CompareTag("Player")) AudioManager.i.PlaySfx(SfxId.PlayerHurt);
+            else if (gameObject.CompareTag("Dog")) AudioManager.i.PlaySfx(SfxId.DogHurt);
+            else AudioManager.i.PlaySfx(SfxId.BossHurt);
+        };
+
+        OnDeath += () => { 
+            animator.SetState(CharacterState.Dead);
+        };
+
+        OnHeal += () => {
+            HealSprite();
+        };
     }
 
     public void HurtSprite()
@@ -41,20 +66,27 @@ public class CharacterHealth : MonoBehaviour
     public void AddHealth(float health=1)
     {
         currentHealth += health;
-        HealSprite();
+        OnHeal?.Invoke();
         
         if (currentHealth > maxHealth) currentHealth = maxHealth;
 
         GameController.i.SetPlayerHealth(currentHealth);
+        
     }
 
     public void SubHealth(float health=1)
     {
         currentHealth -= health;
-        HurtSprite();
+
+        OnHurt?.Invoke();
         
         if (currentHealth < 0) currentHealth = 0;
-        if (currentHealth == 0) GameController.i.OnDeath();
+        if (currentHealth == 0)
+        {
+            if (gameObject.CompareTag("Player")) GameController.i.OnPlayerDeath(); 
+
+            OnDeath?.Invoke();
+        }
        
         GameController.i.SetPlayerHealth(currentHealth);
         GameController.i.CameraController.ShakeCamera();

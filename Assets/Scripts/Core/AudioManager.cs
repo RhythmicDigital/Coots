@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
 
-public enum SfxId { Shoot, Grappling, Ungrapple, UISelect, UIConfirm, UIPause, UIUnpause, BossShoot }
+public enum SfxId { Shoot, Grappling, Ungrapple, UISelect, UIConfirm, UIPause, UIUnpause, BossShoot, PlayerHurt, BossHurt, DogHurt, PlayerDeath }
 public enum MusicId { Title, Gameplay }
 public class AudioManager : MonoBehaviour
 {
@@ -23,14 +23,20 @@ public class AudioManager : MonoBehaviour
     void Awake()
     {
         i = this;
-    }
 
-    void Start() 
-    {
         sfxLookup = sfxList.ToDictionary(x => x.id);
         musicLookup = musicList.ToDictionary(x => x.id);
     }
 
+    void Start() 
+    {
+
+    }
+
+    public void StopMusic()
+    {
+        musicPlayer.Stop();
+    }
     public void PlayMusic(AudioClip clip, bool loop=true)
     {
         if (clip == null) return;
@@ -44,6 +50,16 @@ public class AudioManager : MonoBehaviour
         if (!musicLookup.ContainsKey(audioId)) return;
         var audioData = musicLookup[audioId];
         PlayMusic(audioData.clip);
+    }
+    
+    public void PlayMusic()
+    {
+        musicPlayer.Play();
+    }
+
+    public void PauseMusic()
+    {
+        musicPlayer.Pause();
     }
 
     public void PlaySfx(AudioClip clip, bool loop=false)

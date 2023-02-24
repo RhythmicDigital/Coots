@@ -22,30 +22,34 @@ public class ProjectileShooter : MonoBehaviour
 
     public event Action OnShoot;
 
+    public void Init()
+    {
+        currentProjectileIndex = 0;
+        timeSinceLastShot = 0;
+    }
+
     void Update() 
     {
-        HandleUpdate();
+        if (automaticFiring) HandleUpdate();
     }
 
     public void HandleUpdate()
     {
-        if (automaticFiring)
+    
+        timeSinceLastShot += Time.deltaTime;
+        if (timeSinceLastShot >= delayBetweenShots)
         {
-            timeSinceLastShot += Time.deltaTime;
-            if (timeSinceLastShot >= delayBetweenShots)
+            switch (shootType)
             {
-                switch (shootType)
-                {
-                    case ShootType.Single:
-                        Shoot(GetCurrentProjectileName());
-                        break;
-                    case ShootType.Circle:
-                        ShootCircle(GetCurrentProjectileName());
-                        break;
-                }
-                OnShoot?.Invoke();
-                timeSinceLastShot = 0;
+                case ShootType.Single:
+                    Shoot(GetCurrentProjectileName());
+                    break;
+                case ShootType.Circle:
+                    ShootCircle(GetCurrentProjectileName());
+                    break;
             }
+            OnShoot?.Invoke();
+            timeSinceLastShot = 0;
         }
     }
 

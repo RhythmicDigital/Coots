@@ -2,9 +2,10 @@
 using System.Linq;
 using UnityEngine;
 
+public enum GrappleState { Idle, Jumping, HasInstantPull, UsedInstantPull }
 public class GrappleController : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] 
     private Rigidbody2D _rigidbody;
 
     [SerializeField]
@@ -27,6 +28,8 @@ public class GrappleController : MonoBehaviour
     private float _currentDistance, _startDistance;
 
     private bool _connected;
+
+    public GrappleState State { get; private set; }
 
     public bool Grappling => _connected;
 
@@ -67,8 +70,7 @@ public class GrappleController : MonoBehaviour
         AudioManager.i.PlaySfx(SfxId.Ungrapple);
 
         Vector2 ungrappleForce = Vector2.zero;
-        if (_connected)
-            ungrappleForce = (_anchorPosition.transform.position - _rigidbody.transform.position).normalized * GlobalSettings.i.UngrappleFlySpeed;
+        if (_connected) ungrappleForce = (_anchorPosition.transform.position - _rigidbody.transform.position).normalized * GlobalSettings.i.UngrappleFlySpeed;
         _rigidbody.AddForce(ungrappleForce);
     }
 
@@ -89,11 +91,11 @@ public class GrappleController : MonoBehaviour
         if (_connectedTo.gameObject.GetComponent<Entity>())
             if (_connectedTo.gameObject.GetComponent<Entity>().State == EntityState.Inactive) Disconnect();
 
-        if (_maxDistance - _currentDistance > 1)
+        if (_maxDistance - _currentDistance > 1 && State == GrappleState.HasInstantPull)
         {
             _maxDistance = Mathf.MoveTowards(_maxDistance, _currentDistance + 1, Time.deltaTime * GlobalSettings.i.GrappleSpeed);
         }
-
+        
         var connectedToPos = _connectedTo.TransformPoint(_connectedToOffset);
         var startMoved = connectedToPos != _startPosition;
         _startPosition = connectedToPos;
@@ -314,5 +316,10 @@ public class GrappleController : MonoBehaviour
         {
             _lr.SetPosition(i + 1, _ropePositions[i].pos);
         }
+    }
+
+    public void SetState(GrappleState state)
+    {
+        State = state;
     }
 }

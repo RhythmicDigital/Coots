@@ -3,10 +3,9 @@ using UnityEngine.Events;
 
 // From: https://github.com/Brackeys/2D-Character-Controller
 
-public enum CharacterState { Idle, Moving, Shooting, Grappling, Crouching, Jumping, Landing }
-
 public class CharacterController2D : MonoBehaviour
 {
+    [SerializeField] GrappleController _grappleController;
     [SerializeField] private float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
     [Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;          // Amount of maxSpeed applied to crouching movement. 1 = 100%
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
@@ -79,7 +78,10 @@ public class CharacterController2D : MonoBehaviour
             {
                 m_Grounded = true;
                 if (m_TimeSinceGrounded > 0.006)
+                {
                     OnLandEvent.Invoke();
+                    _grappleController.SetState(GrappleState.Idle);
+                }
                 break;
             }
         }
@@ -191,6 +193,7 @@ public class CharacterController2D : MonoBehaviour
             m_TimeSinceJumping = 0;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
             OnJumpEvent.Invoke();
+            _grappleController.SetState(GrappleState.Jumping);
         }
 
         if (Mathf.Abs(move) > 0)

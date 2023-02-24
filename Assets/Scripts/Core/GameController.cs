@@ -5,10 +5,12 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System.Linq;
 using TMPro;
+using System;
 
 public enum GameState { Playing, Paused, PreGame, Win, Loss }
 public class GameController : MonoBehaviour
 {
+    [SerializeField] Transform playerStartPoint;
     [SerializeField] Boss boss;
     [SerializeField] InputController inputController;
     [SerializeField] CharacterController2D characterController;
@@ -21,10 +23,10 @@ public class GameController : MonoBehaviour
     [SerializeField] List<GameObject> healthImages;
     [SerializeField] TMP_Text timerText;
 
-    [SerializeField] GameObject pauseScreen;
-    [SerializeField] GameObject titleScreen;
-    [SerializeField] GameObject deathScreen;
-    [SerializeField] GameObject endScreen;
+    [SerializeField] Screen pauseScreen;
+    [SerializeField] Screen titleScreen;
+    [SerializeField] Screen deathScreen;
+    [SerializeField] Screen endScreen;
     
     GameState state;
     GameState stateBeforePause;
@@ -37,12 +39,92 @@ public class GameController : MonoBehaviour
     public GameObject Player => player;
     public Boss Boss => boss;
     public CameraController CameraController => cameraController;
+
+    public event Action OnPreGame;
+    public event Action OnStartPlaying;
+    public event Action OnLoss;
+    public event Action OnPause;
+    public event Action OnUnpause;
     
     // Start is called before the first frame update
     void Awake()
     {
         i = this;
         PauseGame(false);
+    }
+
+    void Start() 
+    {
+        OnPreGame += () => {
+            AudioManager.i.PlayMusic(MusicId.Title);
+            titleScreen.SetActive(true);
+            player.transform.position = playerStartPoint.position;
+        };
+        
+        OnStartPlaying += () => {
+            ObjectPool.i.ResetPool();
+            boss.Init();
+            grappleController.Disconnect();
+            player.GetComponent<CharacterHealth>().Init();
+            titleScreen.SetActive(false);
+            player.transform.position = playerStartPoint.position;
+            AudioManager.i.PlayMusic(MusicId.Gameplay);
+        };
+
+        OnPause += () => {
+            AudioManager.i.PauseMusic();
+            AudioManager.i.PlaySfx(SfxId.UIPause);
+            pauseScreen.SetActive(true);
+            SetState(GameState.Paused);
+        };
+
+        OnUnpause += () => {
+            AudioManager.i.PlayMusic();
+            AudioManager.i.PlaySfx(SfxId.UIUnpause);
+            pauseScreen.SetActive(false);
+            SetState(GameState.Playing);
+        };
+
+        OnLoss += () => {
+            AudioManager.i.PlaySfx(SfxId.PlayerDeath);
+            AudioManager.i.StopMusic();
+            deathScreen.SetActive(true);
+        };
+
+        pauseScreen.OnSelected += (int selection) => {
+            if (selection == 0)
+            {
+                OnUnpause?.Invoke();
+            }
+            else if (selection == 1)
+            {
+                SetState(GameState.PreGame);
+            }
+        };
+
+        deathScreen.OnSelected += (int selection) => {
+            if (selection == 0)
+            {
+                SetState(GameState.Playing);
+            }
+            else if (selection == 1)
+            {
+                SetState(GameState.PreGame);
+            }
+        };
+
+        endScreen.OnSelected += (int selection) => {
+            if (selection == 0)
+            {
+                SetState(GameState.Playing);
+            }
+            else if (selection == 1)
+            {
+                SetState(GameState.PreGame);
+            }
+        };
+
+        SetState(GameState.PreGame);
     }
 
     // Update is called once per frame
@@ -68,6 +150,26 @@ public class GameController : MonoBehaviour
             {
                 PauseGame(false);
             }
+
+            pauseScreen.HandleUpdate();
+        }
+
+        else if (state == GameState.PreGame)
+        {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                SetState(GameState.Playing);
+            }
+        }
+
+        else if (state == GameState.Loss)
+        {
+            deathScreen.HandleUpdate();
+        }
+
+        else if (state == GameState.Win)
+        {
+            endScreen.HandleUpdate();
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -101,12 +203,12 @@ public class GameController : MonoBehaviour
         {
             stateBeforePause = state;
             SetState(GameState.Paused);
-            AudioManager.i.PlaySfx(SfxId.UIPause);
+            OnPause?.Invoke();
         }
         else
         {
             SetState(stateBeforePause);
-            AudioManager.i.PlaySfx(SfxId.UIUnpause);
+            OnUnpause?.Invoke();
         }
     }
 
@@ -116,22 +218,39 @@ public class GameController : MonoBehaviour
     {
         if (state == newState) return;
 
-        if (state == GameState.Playing)
+        if (newState == GameState.Playing)
         {
             Physics.autoSimulation = true;
             Time.timeScale = 1;
+
+            if (state == GameState.PreGame || state == GameState.Loss || state == GameState.Win)
+            {
+                OnStartPlaying?.Invoke();
+            }
         }
         else
         {
             Physics.autoSimulation = false;
             Time.timeScale = 0;
+
+            if (newState == GameState.PreGame)
+            {
+                OnPreGame?.Invoke();
+            }
+
+            else if (newState == GameState.Loss)
+            {
+                OnLoss?.Invoke();
+            }
+
         }
 
-        pauseScreen.SetActive(newState == GameState.Paused);
         titleScreen.SetActive(newState == GameState.PreGame);
+        pauseScreen.SetActive(newState == GameState.Paused);
         endScreen.SetActive(newState == GameState.Win);
         deathScreen.SetActive(newState == GameState.Loss);
 
+        state = newState;
     }
 
     public void EndGame()
@@ -162,9 +281,9 @@ public class GameController : MonoBehaviour
         timerText.text = text;
     }
 
-    public void OnDeath()
+    public void OnPlayerDeath()
     {
-        deathScreen.SetActive(true);
         SetState(GameState.Loss);
     }
+
 }

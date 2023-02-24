@@ -11,6 +11,8 @@ public class GlobalSettings : MonoBehaviour
     public float MaxVelocity = 30;
     public float BoostSpeed = 2000;
     public float FrameRate = 0.16f;
+    public Color HighlightedColor = Color.grey;
+    public Color UnhighlightedColor = Color.white;
     public static GlobalSettings i;
 
     // Start is called before the first frame update

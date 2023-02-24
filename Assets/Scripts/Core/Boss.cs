@@ -6,6 +6,7 @@ using System.Linq;
 
 public class Boss : MonoBehaviour
 {
+    [SerializeField] CharacterHealth health;
     [SerializeField] CharacterAnimator animator;
     [SerializeField] List<ProjectileShooter> shooters;
     [SerializeField] List<Transform> waypoints;
@@ -15,12 +16,21 @@ public class Boss : MonoBehaviour
 
     void Start() 
     {
+        Init();
+    }
+    public void Init() 
+    {
+        currentShooter = 0;
+        health.Init();
+        transform.position = waypoints.ElementAt(0).position;
+        
         animator.ShootAnim.OnEnd += () => {
             animator.SetState(CharacterState.Idle);
         };
         
         foreach(ProjectileShooter shooter in shooters)
         {
+            shooter.Init();
             shooter.OnShoot += () => {
                 AudioManager.i.PlaySfx(SfxId.BossShoot);
                 animator.SetState(CharacterState.Shooting);

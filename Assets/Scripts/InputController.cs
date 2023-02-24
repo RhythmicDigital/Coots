@@ -58,6 +58,11 @@ class InputController : MonoBehaviour
             _grappleController.Disconnect();
             _grabController.Disconnect();
 
+            if (_grappleController.State == GrappleState.HasInstantPull)
+            {
+                _grappleController.SetState(GrappleState.UsedInstantPull);
+            }
+
             return;
         }
         if (_grappleController.Grappling || _grabController.Grabbing) return;
@@ -71,10 +76,19 @@ class InputController : MonoBehaviour
 
         if (grappleObj == null || grappleObj.Interaction == GrappleObject.GrappleInteraction.Connect)
         {
-            _grappleController.ConnectToPoint(hit.transform, hit.point);
+            if (_characterController.Grounded == false)
+            {   
+                if (_grappleController.State == GrappleState.Jumping || _grappleController.State == GrappleState.UsedInstantPull)
+                {
+                    if (_grappleController.State == GrappleState.Jumping)
+                        _grappleController.SetState(GrappleState.HasInstantPull);
+                        
+                    _grappleController.ConnectToPoint(hit.transform, hit.point);
 
-            GameController.i.PlayerAnimator.SetState(CharacterState.Shooting);
-            AudioManager.i.PlaySfx(SfxId.Shoot);
+                    GameController.i.PlayerAnimator.SetState(CharacterState.Shooting);
+                    AudioManager.i.PlaySfx(SfxId.Shoot);
+                }
+            }
         }
         else if (grappleObj.Interaction == GrappleObject.GrappleInteraction.Pull)
         {

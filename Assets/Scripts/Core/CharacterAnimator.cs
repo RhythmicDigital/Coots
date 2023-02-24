@@ -4,12 +4,16 @@ using UnityEngine;
 using System;
 
 public enum FacingDirection { Right, Left }
+
+public enum CharacterState { Idle, Moving, Shooting, Grappling, Crouching, Jumping, Landing, Hurt, Dead }
+
 public class CharacterAnimator : MonoBehaviour
 {
     [SerializeField] List<Sprite> idleSprites;
     [SerializeField] List<Sprite> jumpSprites;
     [SerializeField] List<Sprite> walkRightSprites;
     [SerializeField] List<Sprite> shootSprites;
+    [SerializeField] List<Sprite> deadSprites;
     [SerializeField] List<Sprite> grapplingSprites;
     [SerializeField] List<Sprite> hurtSprites;
     [SerializeField] List<Sprite> crouchSprites;
@@ -25,6 +29,7 @@ public class CharacterAnimator : MonoBehaviour
     SpriteAnimator currentAnim;
     SpriteAnimator previousAnim;
     SpriteAnimator landAnim;
+    SpriteAnimator deadAnim;
 
     public CharacterState State { get; private set; }
     CharacterState previousState;
@@ -37,14 +42,16 @@ public class CharacterAnimator : MonoBehaviour
     public bool IsPlaying { get; private set; }
     public FacingDirection FacingDirection { get; private set; }
     public SpriteAnimator ShootAnim => shootAnim;
+    public SpriteAnimator HurtAnim => hurtAnim;
+    public CharacterState PreviousState => previousState;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        Init();
     }
     void Start() 
     {
-        Init();
     }
 
     public void Init()
@@ -59,6 +66,7 @@ public class CharacterAnimator : MonoBehaviour
         crouchAnim = new SpriteAnimator(crouchSprites, spriteRenderer, frameRate);
         grapplingAnim = new SpriteAnimator(grapplingSprites, spriteRenderer, frameRate);
         landAnim = new SpriteAnimator(landSprites, spriteRenderer, frameRate);
+        deadAnim = new SpriteAnimator(landSprites, spriteRenderer, frameRate);
 
         previousState = State;
 
@@ -122,6 +130,9 @@ public class CharacterAnimator : MonoBehaviour
                 break;
             case CharacterState.Landing:
                 currentAnim = jumpAnim;
+                break;
+            case CharacterState.Dead:
+                currentAnim = deadAnim;
                 break;
         }
         currentAnim.Start();

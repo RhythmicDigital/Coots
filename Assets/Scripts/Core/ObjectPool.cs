@@ -36,6 +36,20 @@ public class ObjectPool : MonoBehaviour
         }
 
     }
+
+    public void ResetPool() 
+    {   
+        foreach (ObjectListData listData in objectListLookup.Values)
+        {
+            for (int j = 0; j < listData.list.Count; j++) 
+            {
+                if (listData.list[j].activeInHierarchy
+                    || listData.list[j].GetComponent<Entity>().State == EntityState.Active) 
+                    listData.list[j].SetActive(false);
+            }
+        }
+    }
+
     void InitObject(string name, int amount = 1)
     {
         if (!objectListLookup.ContainsKey(name)) 
@@ -54,7 +68,7 @@ public class ObjectPool : MonoBehaviour
             objectListLookup[name].list.Add(spawn);
         }
     }
-    public void ResetPool() 
+    public void ClearPool() 
     {
         foreach(ObjectListData data in objectListLookup.Values)
         {
