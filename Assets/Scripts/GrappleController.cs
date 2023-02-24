@@ -32,6 +32,8 @@ public class GrappleController : MonoBehaviour
     public GrappleState State { get; private set; }
 
     public bool Grappling => _connected;
+    public Transform ConnectedTo => _connectedTo;
+    public float Distance => _currentDistance;
 
     public void ConnectToPoint(Transform obj, Vector3 point)
     {
@@ -94,6 +96,7 @@ public class GrappleController : MonoBehaviour
         if (_maxDistance - _currentDistance > 1 && State == GrappleState.HasInstantPull)
         {
             _maxDistance = Mathf.MoveTowards(_maxDistance, _currentDistance + 1, Time.deltaTime * GlobalSettings.i.GrappleSpeed);
+            _rigidbody.AddForce((_connectedTo.position - transform.position).normalized * Time.deltaTime * GlobalSettings.i.GrappleSpeed);
         }
         
         var connectedToPos = _connectedTo.TransformPoint(_connectedToOffset);

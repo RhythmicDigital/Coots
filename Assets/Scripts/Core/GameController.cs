@@ -230,8 +230,11 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            Physics.autoSimulation = false;
-            Time.timeScale = 0;
+            if (newState != GameState.Loss)
+            {
+                Physics.autoSimulation = false;
+                Time.timeScale = 0;
+            }
 
             if (newState == GameState.PreGame)
             {

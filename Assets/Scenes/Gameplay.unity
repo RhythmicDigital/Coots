@@ -882,9 +882,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxFallVelocity: -30
   Gravity: -50
-  GrappleSpeed: 30
+  GrappleSpeed: 1.00010004e+27
   UngrappleFlySpeed: 1000
-  MaxVelocity: 30
+  MaxVelocity: 10001000
   BoostSpeed: 2000
   FrameRate: 0.16
   HighlightedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -3019,7 +3019,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1.35}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -3030,8 +3030,24 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 1.5}
+  m_Size: {x: 1, y: 1.5}
   m_EdgeRadius: 0
+--- !u!114 &1041245525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041245517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd85351a9d456466fb119eef595900e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grappleController: {fileID: 556923565}
+  rigidbody: {fileID: 1041245519}
+  angularSpeed: 100
+  circleRadius: 10000
 --- !u!1 &1043784587 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 616832130, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
@@ -4036,29 +4052,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idleSprites:
-  - {fileID: 21300000, guid: 33d1731dc977945e6b526d56a1d27b8b, type: 3}
-  - {fileID: 21300000, guid: 51d057483a15e4e68823c960a47c4f0d, type: 3}
+  - {fileID: 21300000, guid: 576e78f0dc684477987414b6bde77866, type: 3}
+  - {fileID: 21300000, guid: e8f7d4801712942dbb79f16a9016d329, type: 3}
   jumpSprites:
-  - {fileID: 21300000, guid: d4b82be9b472646e2a7d0d648a7d28dc, type: 3}
-  - {fileID: 21300000, guid: 2c717d45e6b904a599791558f146f5e6, type: 3}
-  - {fileID: 21300000, guid: 0eb7f26cfa1634e6686b24d76f8fc205, type: 3}
+  - {fileID: 21300000, guid: 544cfb76e309e49f292295548d5f6765, type: 3}
   walkRightSprites:
-  - {fileID: 21300000, guid: cd405f57369ec4e3784222758b8332a0, type: 3}
-  - {fileID: 21300000, guid: 7cc006bda2eb5470998e5f8744165826, type: 3}
+  - {fileID: 21300000, guid: 7f9a520f9a6a84e27aec07b66354ee8e, type: 3}
+  - {fileID: 21300000, guid: 8f82f332e007e4653a8d4d8d12234bef, type: 3}
+  - {fileID: 21300000, guid: 88c29d4df4af74f12b24774029e40162, type: 3}
+  - {fileID: 21300000, guid: 94db47485638e4b5d9c3df8d5da9a804, type: 3}
   shootSprites:
-  - {fileID: 21300000, guid: 0eb7f26cfa1634e6686b24d76f8fc205, type: 3}
-  - {fileID: 21300000, guid: 2c717d45e6b904a599791558f146f5e6, type: 3}
-  - {fileID: 21300000, guid: d4b82be9b472646e2a7d0d648a7d28dc, type: 3}
-  deadSprites: []
+  - {fileID: 21300000, guid: de885571beaba4d9f809d38d985ed2eb, type: 3}
+  deadSprites:
+  - {fileID: 21300000, guid: fd70f710dcd2b44e388127123e58e92d, type: 3}
   grapplingSprites:
-  - {fileID: 21300000, guid: 1985063c1e95746889b633706aae31d6, type: 3}
+  - {fileID: 21300000, guid: de885571beaba4d9f809d38d985ed2eb, type: 3}
   hurtSprites:
-  - {fileID: 21300000, guid: 1985063c1e95746889b633706aae31d6, type: 3}
+  - {fileID: 21300000, guid: 02e995cc85b2345a3a91166d0c4ffb3b, type: 3}
   crouchSprites:
-  - {fileID: 21300000, guid: 1985063c1e95746889b633706aae31d6, type: 3}
+  - {fileID: 21300000, guid: e8f7d4801712942dbb79f16a9016d329, type: 3}
   landSprites:
-  - {fileID: 21300000, guid: 1985063c1e95746889b633706aae31d6, type: 3}
-  - {fileID: 21300000, guid: d4b82be9b472646e2a7d0d648a7d28dc, type: 3}
+  - {fileID: 21300000, guid: fd70f710dcd2b44e388127123e58e92d, type: 3}
 --- !u!212 &1562690849 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 4434477019045734679, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
@@ -4088,7 +4102,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1580149633}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4432,7 +4446,7 @@ GameObject:
   - component: {fileID: 1789228089}
   - component: {fileID: 1789228088}
   - component: {fileID: 1789228090}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: GroundFloor
   m_TagString: Grapple
   m_Icon: {fileID: 0}
@@ -5318,6 +5332,26 @@ PrefabInstance:
       propertyPath: _ropeLayerMask.m_Bits
       value: 13056
       objectReference: {fileID: 0}
+    - target: {fileID: 1162441040093405434, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1162441040093405434, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1162441040093405434, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1162441040093405434, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1616715630375043667, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2560452287344840446, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: m_Name
       value: EssentialObjects
@@ -5433,7 +5467,7 @@ PrefabInstance:
     - target: {fileID: 2560452288324930413, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: musicList.Array.data[0].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 6df7edd8c006a4b64bd293701c627e4b, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 2560452288324930413, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: musicList.Array.data[1].clip
       value: 
@@ -5522,14 +5556,30 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4434477019045734672, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4434477019045734673, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: m_Name
       value: PlayerSprite
       objectReference: {fileID: 0}
+    - target: {fileID: 4434477019045734673, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434477019045734679, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_Size.x
+      value: 2.6666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434477019045734679, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_Size.y
+      value: 2.6666667
+      objectReference: {fileID: 0}
     - target: {fileID: 4434477019045734679, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 33d1731dc977945e6b526d56a1d27b8b, type: 3}
+      objectReference: {fileID: 21300000, guid: 576e78f0dc684477987414b6bde77866, type: 3}
     - target: {fileID: 4434477019045734679, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: m_SortingLayer
       value: 1
@@ -5537,6 +5587,10 @@ PrefabInstance:
     - target: {fileID: 4434477019045734679, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: m_SortingLayerID
       value: -462076741
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434477019294235838, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4434477019500901835, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: _canBeGrappled.m_Bits
@@ -5716,7 +5770,47 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4434477019500901879, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434477019500901879, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434477020319610532, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_LocalPosition.y
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434477020319610533, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 4434477020665894207, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7012462539340198585, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 88afb4287b311444090c513d220395e6, type: 3}
+    - target: {fileID: 7012462539340198585, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7012462539340198585, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7012462539340198585, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7012462539340198585, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7012462539340198585, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 67739285
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2302900121701010684, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
