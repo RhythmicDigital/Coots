@@ -49,9 +49,6 @@ public class CharacterAnimator : MonoBehaviour
     {
         Init();
     }
-    void Start() 
-    {
-    }
 
     public void Init()
     {
@@ -76,10 +73,10 @@ public class CharacterAnimator : MonoBehaviour
         else
             currentAnim = idleAnim;
     }
-    
+
     private void Update()
     {
-        
+        return;
         if (IsPlaying)
         {
             var prevAnim = currentAnim;
@@ -87,7 +84,7 @@ public class CharacterAnimator : MonoBehaviour
             if (currentAnim != prevAnim || IsMoving != wasPreviouslyMoving)
                 currentAnim.Start();
 
-            currentAnim.HandleUpdate();                
+            currentAnim.HandleUpdate();
 
             previousAnim = currentAnim;
             wasPreviouslyMoving = IsMoving;
@@ -99,7 +96,7 @@ public class CharacterAnimator : MonoBehaviour
         FacingDirection = dir;
     }
 
-    public void SetPlaying(bool playing) 
+    public void SetPlaying(bool playing)
     {
         IsPlaying = playing;
     }
@@ -138,7 +135,7 @@ public class CharacterAnimator : MonoBehaviour
         }
         currentAnim.Start();
     }
-    
+
     public void OnCrouch(bool crouch)
     {
         if (crouch)
@@ -162,11 +159,11 @@ public class CharacterAnimator : MonoBehaviour
         SetState(CharacterState.Idle);
     }
 
-    public void OnLand() 
+    public void OnLand()
     {
         if (GameController.i.Player.GetComponent<CharacterController2D>().m_Moving)
-            SetState(CharacterState.Moving); 
-        else 
+            SetState(CharacterState.Moving);
+        else
             SetState(CharacterState.Idle);
     }
 
