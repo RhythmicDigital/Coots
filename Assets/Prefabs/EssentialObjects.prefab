@@ -4658,6 +4658,54 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1019463169}
     - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimPull.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimPull.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimPull.g
+      value: 0.9920237
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimPull.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimValid.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimValid.b
+      value: 0.62352943
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimValid.g
+      value: 0.50980395
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimValid.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimInvalid.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimInvalid.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimInvalid.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
+      propertyPath: _aimInvalid.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162537684225880303, guid: b4992fb645edf7c4bade33be4263ae54, type: 3}
       propertyPath: _canBeGrappled.m_Bits
       value: 61952
       objectReference: {fileID: 0}
