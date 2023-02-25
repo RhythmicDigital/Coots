@@ -116,9 +116,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySfx(SfxId audioId, bool loop = false)
     {
-        if (!sfxLookup.ContainsKey(audioId)) return;
-
-        var audioData = sfxLookup[audioId];
+        if (!sfxLookup.TryGetValue(audioId, out var audioData)) return;
+        Debug.Log($"Playing SFX {audioId} with clip name {audioData.clip.name}");
         StartCoroutine(PlaySfx(audioData.clip, 0, loop));
     }
 
