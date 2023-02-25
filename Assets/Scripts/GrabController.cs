@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class GrabController : MonoBehaviour
 {
@@ -15,12 +16,40 @@ public class GrabController : MonoBehaviour
 
     private float _distance;
 
+    Coroutine _currentRoutine = null;
+
     private void Awake()
     {
         _ropeJoint = Instantiate(_ropeJointPrefab);
         _ropeJoint.enabled = false;
         _ropeJointTransform = _ropeJoint.transform;
         _lr = GetComponent<LineRenderer>();
+    }
+
+    public void FakeGrab(Vector2 pos)
+    {
+        if (_connected)
+        {
+            Disconnect();
+        }
+        _currentRoutine = StartCoroutine(DoFakeGrab(pos));
+    }
+
+    private IEnumerator DoFakeGrab(Vector2 pos)
+    {
+        _connected = true;
+        _lr.positionCount = 2;
+        _lr.enabled = true;
+
+        for (var t = 0f; t < 1; t += Time.deltaTime * 5)
+        {
+            _lr.SetPosition(0, transform.position);
+            _lr.SetPosition(1, Vector2.Lerp(pos, transform.position, t));
+            yield return null;
+        }
+
+        _currentRoutine = null;
+        Disconnect();
     }
 
     public void ConnectToItem(RaycastHit2D hit)
@@ -48,11 +77,14 @@ public class GrabController : MonoBehaviour
         _ropeJoint.enabled = false;
         _lr.enabled = false;
         _connected = false;
+
+        if (_currentRoutine != null) StopCoroutine(_currentRoutine);
+        _currentRoutine = null;
     }
 
     public void HandleUpdate()
     {
-        if (!_connected) return;
+        if (!_connected || _currentRoutine != null) return;
         var connectedTo = _ropeJoint.connectedBody.transform.TransformPoint(_ropeJoint.connectedAnchor);
         _lr.SetPosition(0, transform.position);
         _lr.SetPosition(1, connectedTo);
@@ -60,7 +92,7 @@ public class GrabController : MonoBehaviour
 
     public void HandleFixedUpdate()
     {
-        if (!_connected) return;
+        if (!_connected || _currentRoutine != null) return;
         _distance -= Time.fixedDeltaTime * 5;
         if (_distance <= 1)
         {
