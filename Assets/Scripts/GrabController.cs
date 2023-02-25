@@ -39,6 +39,8 @@ public class GrabController : MonoBehaviour
     {
         _connected = true;
         _lr.positionCount = 2;
+        _lr.SetPosition(0, Vector3.zero);
+        _lr.SetPosition(1, Vector3.zero);
         _lr.enabled = true;
 
         for (var t = 0f; t < 1; t += Time.deltaTime * 5)
@@ -84,7 +86,7 @@ public class GrabController : MonoBehaviour
 
     public void HandleUpdate()
     {
-        if (!_connected || _currentRoutine != null) return;
+        if (!_connected || _currentRoutine != null || !_ropeJoint.enabled) return;
         var connectedTo = _ropeJoint.connectedBody.transform.TransformPoint(_ropeJoint.connectedAnchor);
         _lr.SetPosition(0, transform.position);
         _lr.SetPosition(1, connectedTo);
@@ -92,7 +94,7 @@ public class GrabController : MonoBehaviour
 
     public void HandleFixedUpdate()
     {
-        if (!_connected || _currentRoutine != null) return;
+        if (!_connected || _currentRoutine != null || !_ropeJoint.enabled) return;
         _distance -= Time.fixedDeltaTime * 5;
         if (_distance <= 1)
         {
