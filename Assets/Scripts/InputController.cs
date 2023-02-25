@@ -19,6 +19,9 @@ class InputController : MonoBehaviour
     [SerializeField]
     private GrabController _grabController;
 
+    [SerializeField]
+    private Transform _aim;
+
     private Camera _camera;
 
     private float _xDir;
@@ -49,7 +52,7 @@ class InputController : MonoBehaviour
         mousePos.z = transform.position.z - _camera.transform.position.z;
         var mouseWorldPos = _camera.ScreenToWorldPoint(mousePos);
 
-        var aimDirection = mouseWorldPos - _aimParent.position;
+        var aimDirection = (mouseWorldPos - _aimParent.position).normalized;
         _aimParent.rotation = Quaternion.LookRotation(Vector3.forward, aimDirection);
 
 
@@ -65,12 +68,22 @@ class InputController : MonoBehaviour
 
             return;
         }
-        if (_grappleController.Grappling || _grabController.Grabbing) return;
+        if (_grappleController.Grappling || _grabController.Grabbing)
+        {
+            _aim.gameObject.SetActive(false);
+            return;
+        }
+        _aim.gameObject.SetActive(true);
+
+
+        var hit = Physics2D.Raycast(_aimParent.position, aimDirection, _maxGrappleDistance, _canBeGrappled);
+        var distance = hit ? hit.distance : _maxGrappleDistance;
+        _aim.position = _aimParent.position + aimDirection * distance;
+
+        if (!hit) return;
 
         if (!Input.GetButtonDown("Fire1")) return;
 
-        var hit = Physics2D.Raycast(_aimParent.position, aimDirection, _maxGrappleDistance, _canBeGrappled);
-        if (!hit) return;
         var hitGo = hit.rigidbody ? hit.rigidbody.gameObject : hit.collider.gameObject;
         var grappleObj = hitGo.GetComponent<GrappleObject>();
 
