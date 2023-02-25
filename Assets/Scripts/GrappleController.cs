@@ -5,7 +5,7 @@ using UnityEngine;
 public enum GrappleState { Idle, Jumping, HasInstantPull, UsedInstantPull }
 public class GrappleController : MonoBehaviour
 {
-    [SerializeField] 
+    [SerializeField]
     private Rigidbody2D _rigidbody;
 
     [SerializeField]
@@ -13,6 +13,9 @@ public class GrappleController : MonoBehaviour
 
     [SerializeField]
     private DistanceJoint2D _ropeJointPrefab;
+
+    [SerializeField]
+    private float _angularVelocity = 100;
 
     private DistanceJoint2D _ropeJoint;
     private GameObject _anchorPosition;
@@ -67,7 +70,7 @@ public class GrappleController : MonoBehaviour
         _ropeJoint.enabled = false;
         _lr.enabled = false;
         _connected = false;
-        
+
         AudioManager.i.PlaySfx(SfxId.Ungrapple);
 
         Vector2 ungrappleForce = Vector2.zero;
@@ -85,10 +88,10 @@ public class GrappleController : MonoBehaviour
         _rbTransform = _ropeJoint.connectedBody.transform;
     }
 
-    public void HandleUpdate()
+    public void HandleFixedUpdate()
     {
         if (!_connected) return;
-        
+
         if (_connectedTo.gameObject.GetComponent<Entity>())
             if (_connectedTo.gameObject.GetComponent<Entity>().State == EntityState.Inactive) Disconnect();
 
@@ -97,7 +100,7 @@ public class GrappleController : MonoBehaviour
             _maxDistance = Mathf.MoveTowards(_maxDistance, _currentDistance + 1, Time.deltaTime * GlobalSettings.i.GrappleSpeed);
             _rigidbody.AddForce((_connectedTo.position - transform.position).normalized * Time.deltaTime * GlobalSettings.i.GrappleSpeed);
         }
-        
+
         var connectedToPos = _connectedTo.TransformPoint(_connectedToOffset);
         var startMoved = connectedToPos != _startPosition;
         _startPosition = connectedToPos;
@@ -119,7 +122,19 @@ public class GrappleController : MonoBehaviour
         }
 
         CreateNewRopePoints();
+    }
+
+    public void HandleUpdate()
+    {
         UpdateRopeVisuals();
+    }
+
+    public void Move(float x)
+    {
+        var dir = (_startPosition - transform.position).normalized;
+        (dir.x, dir.y) = (dir.y, -dir.x);
+
+        _rigidbody.AddForce(dir * _angularVelocity * x);
     }
 
     private Vector2 GetClosestColliderPointFromRaycastHit(RaycastHit2D hit, PolygonCollider2D polyCollider)

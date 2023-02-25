@@ -77,12 +77,12 @@ class InputController : MonoBehaviour
         if (grappleObj == null || grappleObj.Interaction == GrappleObject.GrappleInteraction.Connect)
         {
             if (_characterController.Grounded == false)
-            {   
+            {
                 if (_grappleController.State == GrappleState.Jumping || _grappleController.State == GrappleState.UsedInstantPull)
                 {
                     if (_grappleController.State == GrappleState.Jumping)
                         _grappleController.SetState(GrappleState.HasInstantPull);
-                        
+
                     _grappleController.ConnectToPoint(hit.transform, hit.point);
 
                     GameController.i.PlayerAnimator.SetState(CharacterState.Shooting);
@@ -105,7 +105,12 @@ class InputController : MonoBehaviour
 
     public void HandleFixedUpdate()
     {
-        if (_grappleController.Grappling) return;
+        if (_grappleController.Grappling)
+        {
+            _grappleController.HandleFixedUpdate();
+            _grappleController.Move(_xDir);
+            return;
+        }
         _characterController.Move(_xDir, _crouch, _jump);
     }
 }
