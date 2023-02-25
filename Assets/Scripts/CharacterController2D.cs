@@ -200,13 +200,18 @@ public class CharacterController2D : MonoBehaviour
             _grappleController.SetState(GrappleState.Jumping);
         }
 
+        if (!m_Grounded && _grappleController.State == GrappleState.Idle)
+        {
+            _grappleController.SetState(GrappleState.Jumping);
+        }
+        
         if (Mathf.Abs(move) > 0)
         {
             m_Moving = true;
             if (m_Moving != m_wasMoving && !crouch && !jump)
                 OnMoveEvent.Invoke();
         }
-        
+
         else if (Mathf.Abs(move) == 0 && m_Moving != m_wasMoving && !crouch && !jump)
         {
             OnIdleEvent.Invoke();

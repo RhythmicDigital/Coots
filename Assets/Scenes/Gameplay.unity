@@ -7197,6 +7197,10 @@ PrefabInstance:
       propertyPath: playerStartPoint
       value: 
       objectReference: {fileID: 1580149634}
+    - target: {fileID: 4434477019500901835, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
+      propertyPath: _maxGrappleDistance
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
 --- !u!1001 &3257938548827979370

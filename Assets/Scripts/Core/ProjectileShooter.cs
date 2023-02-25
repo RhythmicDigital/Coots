@@ -24,10 +24,12 @@ public class ProjectileShooter : MonoBehaviour
     public event Action OnShoot;
 
     [SerializeField] CharacterAnimator animator;
+    Transform mainCameraTransform;
 
     void Awake() 
     {
         animator = GetComponent<CharacterAnimator>();
+        mainCameraTransform = Camera.main.transform;
     }
     
     void Start() 
@@ -38,8 +40,16 @@ public class ProjectileShooter : MonoBehaviour
         };
         
         OnShoot += () => {
-            if (shootSound != SfxId.Null) AudioManager.i.PlaySfx(shootSound);
+            var yDist = Mathf.Abs(mainCameraTransform.position.y - transform.position.y);
             animator.SetState(CharacterState.Shooting);
+            
+            if(yDist > 15)
+            {
+                // If the shooter is far off the screen, don't play the sound
+                return;
+            }
+
+            if (shootSound != SfxId.Null) AudioManager.i.PlaySfx(shootSound);
         };
     }
     public void Init()

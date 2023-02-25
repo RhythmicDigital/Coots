@@ -49,7 +49,7 @@ MonoBehaviour:
   hitRadius: 1
   hittableLayer:
     serializedVersion: 2
-    m_Bits: 9472
+    m_Bits: 132352
   isBouncy: 0
 --- !u!58 &4206591762771830913
 CircleCollider2D:
