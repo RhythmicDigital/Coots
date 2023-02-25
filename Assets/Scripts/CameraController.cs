@@ -151,4 +151,27 @@ public class CameraController : MonoBehaviour
 
         return bounds.center;
     }
+
+    public bool CheckVisibility(Transform thingToCheck)
+    {
+        var screenPos = cam.WorldToScreenPoint(thingToCheck.position);
+        var onScreen = screenPos.x > 0f && screenPos.x < UnityEngine.Screen.width && screenPos.y > 0f && screenPos.y < UnityEngine.Screen.height;
+        var m_renderer = thingToCheck.GetComponent<Renderer>();
+        
+        if (onScreen && m_renderer.isVisible)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool CheckVisibility(GameObject thingToCheck)
+    {
+        return CheckVisibility(thingToCheck.transform);
+    }
+
+    public bool CheckVisibility(GrappleObject grappleObject)
+    {
+        return CheckVisibility(grappleObject.gameObject.transform);
+    }
 }

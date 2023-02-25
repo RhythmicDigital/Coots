@@ -78,11 +78,12 @@ class InputController : MonoBehaviour
         {
             if (_characterController.Grounded == false)
             {   
-                if (_grappleController.State == GrappleState.Jumping || _grappleController.State == GrappleState.UsedInstantPull)
+                if (_grappleController.State == GrappleState.Jumping || _grappleController.State == GrappleState.UsedInstantPull
+                    && CameraController.i.CheckVisibility(hitGo))
                 {
                     if (_grappleController.State == GrappleState.Jumping)
                         _grappleController.SetState(GrappleState.HasInstantPull);
-                        
+
                     _grappleController.ConnectToPoint(hit.transform, hit.point);
 
                     GameController.i.PlayerAnimator.SetState(CharacterState.Shooting);
@@ -90,14 +91,14 @@ class InputController : MonoBehaviour
                 }
             }
         }
-        else if (grappleObj.Interaction == GrappleObject.GrappleInteraction.Pull)
+        else if (grappleObj.Interaction == GrappleObject.GrappleInteraction.Pull && CameraController.i.CheckVisibility(grappleObj))
         {
             _grabController.ConnectToItem(hit);
 
             GameController.i.PlayerAnimator.SetState(CharacterState.Shooting);
             AudioManager.i.PlaySfx(SfxId.Shoot);
         }
-        else
+        else if (CameraController.i.CheckVisibility(grappleObj))
         {
             grappleObj.Interact?.Invoke(hit);
         }
