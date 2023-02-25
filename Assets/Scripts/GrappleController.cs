@@ -91,9 +91,13 @@ public class GrappleController : MonoBehaviour
     public void HandleFixedUpdate()
     {
         if (!_connected) return;
-
-        if (_connectedTo.gameObject.GetComponent<Entity>())
-            if (_connectedTo.gameObject.GetComponent<Entity>().State == EntityState.Inactive) Disconnect();
+        var entity = _connectedTo != null ? _connectedTo.GetComponent<Entity>() : null;
+        if (_connectedTo == null || !_connectedTo.gameObject.activeInHierarchy || (entity && entity.State == EntityState.Inactive))
+        {
+            // If the object we're connected to disappears we need to disconnect
+            Disconnect();
+            return;
+        }
 
         if (_maxDistance - _currentDistance > 1 && State == GrappleState.HasInstantPull)
         {
