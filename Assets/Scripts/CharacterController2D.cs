@@ -45,7 +45,7 @@ public class CharacterController2D : MonoBehaviour
     public BoolEvent OnCrouchEvent;
     private bool m_wasCrouching = false;
     private bool m_wasMoving = false;
-    private bool m_Moving;
+    public bool m_Moving { get; private set; }
 
     private void Awake()
     {

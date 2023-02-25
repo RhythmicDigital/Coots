@@ -164,7 +164,10 @@ public class CharacterAnimator : MonoBehaviour
 
     public void OnLand() 
     {
-        SetState(CharacterState.Idle);
+        if (GameController.i.Player.GetComponent<CharacterController2D>().m_Moving)
+            SetState(CharacterState.Moving); 
+        else 
+            SetState(CharacterState.Idle);
     }
 
     public void SetState(string state)
