@@ -426,6 +426,7 @@ MonoBehaviour:
     m_Bits: 1536
   _grappleController: {fileID: 3009141713868462320}
   _grabController: {fileID: 8229317383843811598}
+  _aim: {fileID: 0}
 --- !u!114 &2162537684225880274
 MonoBehaviour:
   m_ObjectHideFlags: 0
