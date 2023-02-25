@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9229,38 +9229,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 551228262997761136, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: m_Parameters.colorGradient.ctime0
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 551228262997761136, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: m_Parameters.colorGradient.key0.b
-      value: 0.6117647
-      objectReference: {fileID: 0}
-    - target: {fileID: 551228262997761136, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: m_Parameters.colorGradient.key0.g
-      value: 0.50980395
-      objectReference: {fileID: 0}
-    - target: {fileID: 551228262997761136, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: m_Parameters.colorGradient.key0.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 551228262997761136, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: m_Parameters.colorGradient.key1.b
-      value: 0.6117647
-      objectReference: {fileID: 0}
-    - target: {fileID: 551228262997761136, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: m_Parameters.colorGradient.key1.g
-      value: 0.50980395
-      objectReference: {fileID: 0}
-    - target: {fileID: 551228262997761136, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: m_Parameters.colorGradient.key1.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 551228262997761136, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: m_Parameters.colorGradient.m_Mode
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2560452287344840446, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
       propertyPath: m_Name
       value: EssentialObjects
@@ -9317,10 +9285,6 @@ PrefabInstance:
       propertyPath: playerStartPoint
       value: 
       objectReference: {fileID: 1580149634}
-    - target: {fileID: 4434477019500901835, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
-      propertyPath: _maxGrappleDistance
-      value: 100
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc418b87205ee4a40b8a5f8efaee5ff4, type: 3}
 --- !u!1001 &3257938548827979370
