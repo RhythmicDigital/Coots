@@ -49,7 +49,7 @@ MonoBehaviour:
   hitRadius: 1
   hittableLayer:
     serializedVersion: 2
-    m_Bits: 1280
+    m_Bits: 9472
   isBouncy: 0
   damageAmount: 1
 --- !u!58 &3257938548718877011
