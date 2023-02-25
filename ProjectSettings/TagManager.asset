@@ -47,6 +47,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Character
+    uniqueID: 665753501
+    locked: 0
+  - name: Boss
+    uniqueID: 4051994319
+    locked: 0
   - name: Player
     uniqueID: 3832890555
     locked: 0

@@ -85,6 +85,7 @@ public class ProjectileShooter : MonoBehaviour
         projectile.SetActive(true);
         projectile.SetPosition(transform.position);
         projectile.SetMoveSpeed(projectileSpeed);
+        projectile.SetRotation(0);
 
         if (targetPlayer)
             projectile.SetMoveDirection(GameController.i.Player.transform.position - transform.position);
