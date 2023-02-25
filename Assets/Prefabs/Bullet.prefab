@@ -102,6 +102,7 @@ MonoBehaviour:
   hittableLayer:
     serializedVersion: 2
     m_Bits: 1280
+  isBouncy: 1
 --- !u!58 &8032458337797933064
 CircleCollider2D:
   m_ObjectHideFlags: 0

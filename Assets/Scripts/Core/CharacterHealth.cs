@@ -105,12 +105,14 @@ public class CharacterHealth : MonoBehaviour
             {
                 SubHealth();
                 invincibleTimer = 0;
+                collider.GetComponent<Entity>().SetActive(false);
             }
         }
 
         else if ((healingLayers & (1 << collider.gameObject.layer)) != 0)
         {
             AddHealth();
+            collider.GetComponent<Entity>().SetActive(false);
         }
     }
 

@@ -65,13 +65,15 @@ public class Entity : MonoBehaviour
                     if (numBounces > 0)
                     {
                         var contact = hits.ElementAt(0);
-                        var dot = Vector3.Dot(contact.normal, (-MoveDirection));
+                        var dot = Vector3.Dot(contact.normal, -MoveDirection);
                         dot *= 2;
                         var reflection = contact.normal * dot;
                         reflection = reflection + new Vector2(MoveDirection.x, MoveDirection.y);
-                        SetMoveDirection(reflection.normalized);
+                        SetMoveDirection(reflection);
                         numBounces -= 1;
                     }
+                    else 
+                        SetActive(false);
                 }
             }
         }

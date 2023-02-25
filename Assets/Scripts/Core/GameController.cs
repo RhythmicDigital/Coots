@@ -35,8 +35,9 @@ public class GameController : MonoBehaviour
     GameState stateBeforePause;
 
     float timer;
+    bool isTiming;
     public bool BossDefeated = false;
-    
+
     public static GameController i { get; private set; }
 
     public CharacterAnimator PlayerAnimator => playerAnimator;
@@ -49,6 +50,7 @@ public class GameController : MonoBehaviour
     public event Action OnLoss;
     public event Action OnPause;
     public event Action OnUnpause;
+    public event Action OnWin;
     
     // Start is called before the first frame update
     void Awake()
@@ -74,6 +76,7 @@ public class GameController : MonoBehaviour
             player.transform.position = playerStartPoint.position;
             AudioManager.i.PlayMusic(MusicId.Gameplay);
             player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            StartTimer();
         };
 
         OnPause += () => {
@@ -95,6 +98,12 @@ public class GameController : MonoBehaviour
             AudioManager.i.StopMusic();
             deathScreen.SetActive(true);
             grappleController.Disconnect();
+        };
+
+        OnWin += () => {
+            endScreen.SetActive(true);
+            SetTimerText(timer.ToString());
+            StopTimer();
         };
 
         pauseScreen.OnSelected += (int selection) => {
@@ -134,6 +143,8 @@ public class GameController : MonoBehaviour
 
         musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
         sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+
+        ResetTimer();
     }
 
     // Update is called once per frame
@@ -146,6 +157,7 @@ public class GameController : MonoBehaviour
             grabController.HandleUpdate();
             cameraController.HandleUpdate();
             player.GetComponent<CharacterHealth>().HandleUpdate();
+            HandleTimerUpdate();
             
             if (Input.GetButtonDown("Pause"))
             {
@@ -237,24 +249,24 @@ public class GameController : MonoBehaviour
                 OnStartPlaying?.Invoke();
             }
         }
-        else
+        else if (newState == GameState.Paused)
         {
-            if (newState != GameState.Loss)
-            {
-                Physics.autoSimulation = false;
-                Time.timeScale = 0;
-            }
+            Physics.autoSimulation = false;
+            Time.timeScale = 0;
+        }
 
-            if (newState == GameState.PreGame)
-            {
-                OnPreGame?.Invoke();
-            }
+        else if (newState == GameState.PreGame)
+        {
+            OnPreGame?.Invoke();
+        }
 
-            else if (newState == GameState.Loss)
-            {
-                OnLoss?.Invoke();
-            }
-
+        else if (newState == GameState.Loss)
+        {
+            OnLoss?.Invoke();
+        }
+        else if (newState == GameState.Win)
+        {
+            OnWin?.Invoke();
         }
 
         titleScreen.SetActive(newState == GameState.PreGame);
@@ -278,14 +290,24 @@ public class GameController : MonoBehaviour
         healthImages.ElementAt((int)health).SetActive(true);
     }
 
+    void StartTimer()
+    {
+        isTiming = true;
+    }   
     public void ResetTimer()
     {
         timer = 0;
+        StopTimer();
+    }
+
+    void StopTimer()
+    {
+        isTiming = false;
     }
 
     public void HandleTimerUpdate()
     {
-        timer += Time.deltaTime;
+        if (isTiming) timer += Time.deltaTime;
     }
 
     void SetTimerText(string text)
