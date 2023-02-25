@@ -24,6 +24,7 @@ public class Boss : MonoBehaviour
         health.Init();
         transform.position = waypoints.ElementAt(0).position;
         
+        animator.ShootAnim.Init();
         animator.ShootAnim.OnEnd += () => {
             animator.SetState(CharacterState.Idle);
         };

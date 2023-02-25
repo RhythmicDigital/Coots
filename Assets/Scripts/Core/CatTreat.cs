@@ -17,6 +17,7 @@ public class CatTreat : Entity
             if (Vector3.Magnitude (rb.velocity) < GlobalSettings.i.MaxVelocity)
                 rb.AddForce(boostForce);
             
+            AudioManager.i.PlaySfx(SfxId.TreatShot);
             SetActive(false);
         }
     }

@@ -66,7 +66,6 @@ public class GrabController : MonoBehaviour
         {
             Disconnect();
 
-            AudioManager.i.StopSfx();
             AudioManager.i.PlaySfx(SfxId.Ungrapple);
 
             return;

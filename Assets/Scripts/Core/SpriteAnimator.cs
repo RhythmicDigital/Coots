@@ -28,6 +28,10 @@ public class SpriteAnimator
         this.looping = looping;
     }
 
+    public void Init() 
+    {
+        OnEnd = null;
+    }
     public void Start()
     {
         SetState(AnimState.Playing);
@@ -48,7 +52,7 @@ public class SpriteAnimator
         }
     }
     void HandlePlayingUpdate()
-    {
+    {        
         timer += Time.deltaTime;
         if (timer > frameRate)
         {

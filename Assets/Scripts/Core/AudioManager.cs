@@ -4,7 +4,8 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
 
-public enum SfxId { Shoot, Grappling, Ungrapple, UISelect, UIConfirm, UIPause, UIUnpause, BossShoot, PlayerHurt, BossHurt, DogHurt, PlayerDeath }
+public enum SfxId { Shoot, Grappling, Ungrapple, UISelect, UIConfirm, UIPause, UIUnpause, BossShoot, PlayerHurt, BossHurt, DogHurt, PlayerDeath, 
+                    TreatShot, FishShot, BubbleShot, Null, Jump }
 public enum MusicId { Title, Gameplay }
 public class AudioManager : MonoBehaviour
 {
@@ -26,11 +27,6 @@ public class AudioManager : MonoBehaviour
 
         sfxLookup = sfxList.ToDictionary(x => x.id);
         musicLookup = musicList.ToDictionary(x => x.id);
-    }
-
-    void Start() 
-    {
-
     }
 
     public void StopMusic()
@@ -98,11 +94,13 @@ public class AudioManager : MonoBehaviour
     public void SetMusicVolume(float sliderValue)
     {
         mixer.SetFloat("MusicVolume", Mathf.Log10(sliderValue) * 20);
+        PlayerPrefs.SetFloat("MusicVolume", sliderValue);
     }
 
     public void SetSfxVolume(float sliderValue)
     {
         mixer.SetFloat("SFXVolume", Mathf.Log10(sliderValue) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", sliderValue);
     }
 }
 

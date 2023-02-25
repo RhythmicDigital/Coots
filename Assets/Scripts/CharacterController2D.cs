@@ -102,6 +102,9 @@ public class CharacterController2D : MonoBehaviour
             m_Rigidbody2D.AddForce(new Vector2(0, GlobalSettings.i.Gravity));
             if (m_Rigidbody2D.velocity.y < GlobalSettings.i.MaxFallVelocity)
                 m_Rigidbody2D.velocity = new Vector3(m_Rigidbody2D.velocity.x, GlobalSettings.i.MaxFallVelocity, 0);
+            
+            if (m_Rigidbody2D.velocity.y > GlobalSettings.i.MaxVerticalVelocity)
+                m_Rigidbody2D.velocity = new Vector3(m_Rigidbody2D.velocity.x, GlobalSettings.i.MaxVerticalVelocity, 0);
         }
 
         FixedPosition = transform.position;
@@ -192,6 +195,7 @@ public class CharacterController2D : MonoBehaviour
             m_Grounded = false;
             m_TimeSinceJumping = 0;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            AudioManager.i.PlaySfx(SfxId.Jump);
             OnJumpEvent.Invoke();
             _grappleController.SetState(GrappleState.Jumping);
         }

@@ -7,6 +7,7 @@ using System;
 public enum ShootType { Single, Circle }
 public class ProjectileShooter : MonoBehaviour
 {
+    [SerializeField] SfxId shootSound;
     [SerializeField] ShootType shootType;
     [SerializeField] List<string> projectileNames;
     [SerializeField] bool automaticFiring = true;
@@ -22,8 +23,28 @@ public class ProjectileShooter : MonoBehaviour
 
     public event Action OnShoot;
 
+    [SerializeField] CharacterAnimator animator;
+
+    void Awake() 
+    {
+        animator = GetComponent<CharacterAnimator>();
+    }
+    
+    void Start() 
+    {
+        animator.ShootAnim.Init();
+        animator.ShootAnim.OnEnd += () => {
+            animator.SetState(CharacterState.Idle);
+        };
+        
+        OnShoot += () => {
+            if (shootSound != SfxId.Null) AudioManager.i.PlaySfx(shootSound);
+            animator.SetState(CharacterState.Shooting);
+        };
+    }
     public void Init()
     {
+        OnShoot = null;
         currentProjectileIndex = 0;
         timeSinceLastShot = 0;
     }
@@ -60,7 +81,7 @@ public class ProjectileShooter : MonoBehaviour
 
     void Shoot(string name)
     {
-        Entity projectile = ObjectPool.i.GetObject(name).GetComponent<Entity>();
+        Entity projectile = ObjectPool.i.GetObject(GetCurrentProjectileName()).GetComponent<Entity>();
         projectile.SetActive(true);
         projectile.SetPosition(transform.position);
         projectile.SetMoveSpeed(projectileSpeed);
@@ -69,6 +90,8 @@ public class ProjectileShooter : MonoBehaviour
             projectile.SetMoveDirection(GameController.i.Player.transform.position - transform.position);
         else
             projectile.SetMoveDirection(shootDirection);
+        
+        MoveToNextProjectile();
     }
 
     void ShootCircle(string bullet="Bullet")

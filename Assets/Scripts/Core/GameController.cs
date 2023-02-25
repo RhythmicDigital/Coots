@@ -6,6 +6,7 @@ using DG.Tweening;
 using System.Linq;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public enum GameState { Playing, Paused, PreGame, Win, Loss }
 public class GameController : MonoBehaviour
@@ -27,12 +28,15 @@ public class GameController : MonoBehaviour
     [SerializeField] Screen titleScreen;
     [SerializeField] Screen deathScreen;
     [SerializeField] Screen endScreen;
+    [SerializeField] Slider musicSlider;
+    [SerializeField] Slider sfxSlider;
     
     GameState state;
     GameState stateBeforePause;
 
     float timer;
-
+    public bool BossDefeated = false;
+    
     public static GameController i { get; private set; }
 
     public CharacterAnimator PlayerAnimator => playerAnimator;
@@ -69,6 +73,7 @@ public class GameController : MonoBehaviour
             titleScreen.SetActive(false);
             player.transform.position = playerStartPoint.position;
             AudioManager.i.PlayMusic(MusicId.Gameplay);
+            player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         };
 
         OnPause += () => {
@@ -89,6 +94,7 @@ public class GameController : MonoBehaviour
             AudioManager.i.PlaySfx(SfxId.PlayerDeath);
             AudioManager.i.StopMusic();
             deathScreen.SetActive(true);
+            grappleController.Disconnect();
         };
 
         pauseScreen.OnSelected += (int selection) => {
@@ -125,6 +131,9 @@ public class GameController : MonoBehaviour
         };
 
         SetState(GameState.PreGame);
+
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
     }
 
     // Update is called once per frame

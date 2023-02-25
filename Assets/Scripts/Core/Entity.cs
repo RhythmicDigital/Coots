@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Linq;
 
 public enum EntityState { Active, Inactive }
 
@@ -11,6 +12,10 @@ public class Entity : MonoBehaviour
 {
     [SerializeField] float hitRadius;
     [SerializeField] LayerMask hittableLayer;
+    [SerializeField] bool isBouncy;
+    
+    int maxBounces = 10;
+    int numBounces;
 
     public EntityState State { get; private set; } = EntityState.Active;
     public bool IsMoving { get; private set; } = true;
@@ -20,6 +25,8 @@ public class Entity : MonoBehaviour
     void Start() 
     {
         SetActive(true);
+
+        if (isBouncy) numBounces = maxBounces;
     }
 
     public void Update()
@@ -45,7 +52,28 @@ public class Entity : MonoBehaviour
 
         if (collided)
         {
-            SetActive(false);
+            if (!isBouncy)
+                SetActive(false);
+            else
+            {
+                List<RaycastHit2D> hits = new List<RaycastHit2D>();
+                ContactFilter2D filter = new ContactFilter2D {useTriggers = true};
+                int hit = Physics2D.Raycast(transform.position, new Vector2(MoveDirection.x, MoveDirection.y), filter, hits);
+
+                if ( hit != 0 )
+                {
+                    if (numBounces > 0)
+                    {
+                        var contact = hits.ElementAt(0);
+                        var dot = Vector3.Dot(contact.normal, (-MoveDirection));
+                        dot *= 2;
+                        var reflection = contact.normal * dot;
+                        reflection = reflection + new Vector2(MoveDirection.x, MoveDirection.y);
+                        SetMoveDirection(reflection.normalized);
+                        numBounces -= 1;
+                    }
+                }
+            }
         }
     }
 
@@ -58,6 +86,7 @@ public class Entity : MonoBehaviour
     {
         if (active)
         {
+            if (isBouncy) numBounces = maxBounces;
             gameObject.SetActive(active);
             State = EntityState.Active;
         }

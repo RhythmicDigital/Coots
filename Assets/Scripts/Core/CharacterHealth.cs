@@ -32,6 +32,10 @@ public class CharacterHealth : MonoBehaviour
 
         animator.HurtAnim.OnEnd += () => { animator.SetState(animator.PreviousState); };
         
+        OnHurt = null;
+        OnDeath = null;
+        OnHeal = null;
+
         OnHurt += () => {
             HurtSprite();
             animator.SetState(CharacterState.Hurt);

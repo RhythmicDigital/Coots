@@ -47,7 +47,6 @@ public class CharacterAnimator : MonoBehaviour
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         Init();
     }
     void Start() 
@@ -56,8 +55,10 @@ public class CharacterAnimator : MonoBehaviour
 
     public void Init()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
         SetPlaying(true);
-        float frameRate = GlobalSettings.i.FrameRate;
+        float frameRate = 0.16f;
         idleAnim = new SpriteAnimator(idleSprites, spriteRenderer, frameRate);
         walkRightAnim = new SpriteAnimator(walkRightSprites, spriteRenderer, frameRate);
         shootAnim = new SpriteAnimator(shootSprites, spriteRenderer, frameRate, false);

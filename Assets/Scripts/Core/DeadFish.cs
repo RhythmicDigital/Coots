@@ -11,6 +11,7 @@ public class DeadFish : Entity
     {
         if (collider.CompareTag("Player"))
         {
+            AudioManager.i.PlaySfx(SfxId.FishShot);
             SetActive(false);
         }
     }

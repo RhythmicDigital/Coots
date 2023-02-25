@@ -8,6 +8,7 @@ public class Bubble : Entity
     {
         if (collider.CompareTag("Player"))
         {
+            AudioManager.i.PlaySfx(SfxId.BubbleShot);
             SetActive(false);
         }
     }

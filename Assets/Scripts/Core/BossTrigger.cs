@@ -14,14 +14,7 @@ public class BossTrigger : MonoBehaviour
     {
         if (collider.CompareTag("Player"))
         {
-            if (waypointIndex == 4)
-            {
-                GameController.i.EndGame();
-            }
-            else
-            {
-                GameController.i.Boss.MoveToWaypoint(waypointIndex);
-            }
+            GameController.i.Boss.MoveToWaypoint(waypointIndex);
         }
     }
 }

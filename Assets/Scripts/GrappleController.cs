@@ -68,7 +68,6 @@ public class GrappleController : MonoBehaviour
         _lr.enabled = false;
         _connected = false;
         
-        AudioManager.i.StopSfx();
         AudioManager.i.PlaySfx(SfxId.Ungrapple);
 
         Vector2 ungrappleForce = Vector2.zero;

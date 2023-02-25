@@ -50,6 +50,7 @@ MonoBehaviour:
   hittableLayer:
     serializedVersion: 2
     m_Bits: 1280
+  isBouncy: 0
   healAmount: 1
 --- !u!58 &4301218190146111340
 CircleCollider2D:
@@ -108,8 +109,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: 2d2285c6c013743389a7ee0cb0c36337, type: 3}
-  m_Color: {r: 1, g: 0.8220955, b: 0.33490568, a: 1}
+  m_Sprite: {fileID: 21300000, guid: dec61d16693234df2a8c20e6fd327512, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
