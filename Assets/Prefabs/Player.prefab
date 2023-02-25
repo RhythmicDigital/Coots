@@ -46,10 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfd5350ffaa1eec41b38aad9794ac29e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rigidbody: {fileID: 0}
   _ropeLayerMask:
     serializedVersion: 2
     m_Bits: 768
   _ropeJointPrefab: {fileID: 4000419276990806601, guid: 7407737faecbee14ca4e6bd9618f091e, type: 3}
+  _angularVelocity: 50
 --- !u!114 &8229317383843811598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,7 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae0f39c45e053fd49b5c3338c5ee6ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxGrappleDistance: 1000
+  _maxGrappleDistance: 20
   _characterController: {fileID: 2162537684225880274}
   _aimParent: {fileID: 3884134254795655031}
   _canBeGrappled:
@@ -436,6 +438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 653d3493d39e2a44e8a6387c92cabd46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _grappleController: {fileID: 0}
   m_JumpForce: 400
   m_CrouchSpeed: 0.36
   m_MovementSmoothing: 0.05
@@ -502,6 +505,7 @@ MonoBehaviour:
   - {fileID: 0}
   shootSprites:
   - {fileID: 0}
+  deadSprites: []
   grapplingSprites: []
   hurtSprites: []
   crouchSprites: []
