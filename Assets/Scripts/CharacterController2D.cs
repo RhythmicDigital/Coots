@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -71,7 +72,12 @@ public class CharacterController2D : MonoBehaviour
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
+        Collider2D[] colliders =
+            Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround).Concat(
+                Physics2D.OverlapCircleAll(m_GroundCheck.position + 2.5f * k_GroundedRadius * Vector3.left, k_GroundedRadius, m_WhatIsGround)
+            ).Concat(
+                Physics2D.OverlapCircleAll(m_GroundCheck.position + 2.5f * k_GroundedRadius * Vector3.right, k_GroundedRadius, m_WhatIsGround)
+            ).ToArray();
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].gameObject != gameObject)
@@ -102,7 +108,7 @@ public class CharacterController2D : MonoBehaviour
             m_Rigidbody2D.AddForce(new Vector2(0, GlobalSettings.i.Gravity));
             if (m_Rigidbody2D.velocity.y < GlobalSettings.i.MaxFallVelocity)
                 m_Rigidbody2D.velocity = new Vector3(m_Rigidbody2D.velocity.x, GlobalSettings.i.MaxFallVelocity, 0);
-            
+
             if (m_Rigidbody2D.velocity.y > GlobalSettings.i.MaxVerticalVelocity)
                 m_Rigidbody2D.velocity = new Vector3(m_Rigidbody2D.velocity.x, GlobalSettings.i.MaxVerticalVelocity, 0);
         }
@@ -204,7 +210,7 @@ public class CharacterController2D : MonoBehaviour
         {
             _grappleController.SetState(GrappleState.Jumping);
         }
-        
+
         if (Mathf.Abs(move) > 0)
         {
             m_Moving = true;
