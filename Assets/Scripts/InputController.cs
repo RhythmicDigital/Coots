@@ -21,6 +21,9 @@ class InputController : MonoBehaviour
 
     [SerializeField]
     private Transform _aim;
+    [SerializeField]
+    private Color _aimValid, _aimInvalid, _aimPull;
+    private SpriteRenderer _aimSprite;
 
     private Camera _camera;
 
@@ -30,6 +33,7 @@ class InputController : MonoBehaviour
     private void Awake()
     {
         _camera = Camera.main;
+        _aimSprite = _aim.GetComponent<SpriteRenderer>();
     }
 
     public void HandleUpdate()
@@ -79,13 +83,18 @@ class InputController : MonoBehaviour
         var hit = Physics2D.Raycast(_aimParent.position, aimDirection, _maxGrappleDistance, _canBeGrappled);
         var distance = hit ? hit.distance : _maxGrappleDistance;
         _aim.position = _aimParent.position + aimDirection * distance;
-
-        if (!hit) return;
-
-        if (!Input.GetButtonDown("Fire1")) return;
+        if (!hit)
+        {
+            _aimSprite.color = _aimInvalid;
+            return;
+        }
 
         var hitGo = hit.rigidbody ? hit.rigidbody.gameObject : hit.collider.gameObject;
         var grappleObj = hitGo.GetComponent<GrappleObject>();
+
+        _aimSprite.color = grappleObj == null || grappleObj.Interaction == GrappleObject.GrappleInteraction.Connect ? _aimValid : _aimPull;
+
+        if (!Input.GetButtonDown("Fire1")) return;
 
         if (grappleObj == null || grappleObj.Interaction == GrappleObject.GrappleInteraction.Connect)
         {

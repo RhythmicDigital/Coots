@@ -10,6 +10,6 @@ public class VictoryPlatform : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (!_characterController.Grounded) return;
-        if (GameController.i.BossDefeated) GameController.i.WinGame();
+        GameController.i.WinGame();
     }
 }

@@ -102,7 +102,9 @@ public class GameController : MonoBehaviour
 
         OnWin += () => {
             endScreen.SetActive(true);
+            timer = Mathf.Round(timer * 1000.0f) / 1000.0f;
             SetTimerText(timer.ToString());
+            ResetTimer();
             StopTimer();
         };
 
