@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class GrappleObject : MonoBehaviour
 {
@@ -13,5 +11,5 @@ public class GrappleObject : MonoBehaviour
     }
 
     [field: SerializeField] public GrappleInteraction Interaction { get; private set; }
-    public UnityAction<RaycastHit2D> Interact;
+    public Action<RaycastHit2D> Interact;
 }

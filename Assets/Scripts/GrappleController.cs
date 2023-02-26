@@ -130,6 +130,7 @@ public class GrappleController : MonoBehaviour
 
     public void HandleUpdate()
     {
+        if (!_connected) return;
         UpdateRopeVisuals();
     }
 

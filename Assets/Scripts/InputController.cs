@@ -123,6 +123,7 @@ class InputController : MonoBehaviour
         else if (CameraController.i.CheckVisibility(grappleObj))
         {
             grappleObj.Interact?.Invoke(hit);
+            _grabController.FakeGrab(hit.point);
         }
     }
 
