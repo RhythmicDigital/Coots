@@ -15,6 +15,7 @@ public class DeadFish : Entity
 
     void OnTriggerEnter2D(Collider2D collider)
     {
+        if (State != EntityState.Active) return;
         if (collider.CompareTag("Player"))
         {
             AudioManager.i.PlaySfx(SfxId.FishShot);

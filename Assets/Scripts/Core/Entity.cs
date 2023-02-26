@@ -13,6 +13,7 @@ public class Entity : MonoBehaviour
     [SerializeField] float hitRadius;
     [SerializeField] LayerMask hittableLayer;
     [SerializeField] bool isBouncy;
+    [SerializeField] Rigidbody2D rb;
     
     int maxBounces = 10;
     int numBounces;
@@ -129,6 +130,6 @@ public class Entity : MonoBehaviour
 
     void MoveEntity()
     {
-        transform.Translate(MoveDirection.normalized * MoveSpeed * Time.deltaTime);
+        rb.velocity = transform.TransformDirection(MoveDirection.normalized) * MoveSpeed;
     }
 }

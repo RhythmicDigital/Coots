@@ -67,11 +67,15 @@ public class GrabController : MonoBehaviour
 
         _distance = Vector3.Distance(hit.point, transform.position);
 
+
         _ropeJointTransform.position = transform.position;
         _ropeJoint.connectedBody = hit.rigidbody;
         _ropeJoint.connectedAnchor = hit.rigidbody.transform.InverseTransformPoint(hit.point);
         _ropeJoint.distance = _distance;
         _ropeJoint.enabled = true;
+
+        var ent = hit.rigidbody.GetComponent<Entity>();
+        ent.SetIsMoving(false);
     }
 
     public void Disconnect()
@@ -95,14 +99,10 @@ public class GrabController : MonoBehaviour
     public void HandleFixedUpdate()
     {
         if (!_connected || _currentRoutine != null || !_ropeJoint.enabled) return;
-        _distance -= Time.fixedDeltaTime * 5;
-        if (_distance <= 1)
+        _distance -= Time.fixedDeltaTime * 25;
+        if (_distance <= 0)
         {
-            Disconnect();
-
-            AudioManager.i.PlaySfx(SfxId.Ungrapple);
-
-            return;
+            _distance = 0;
         }
 
         _ropeJointTransform.position = transform.position;
