@@ -65,6 +65,7 @@ public class GameController : MonoBehaviour
             AudioManager.i.PlayMusic(MusicId.Title);
             titleScreen.SetActive(true);
             player.transform.position = playerStartPoint.position;
+            cameraController.HandleUpdate();
         };
         
         OnStartPlaying += () => {

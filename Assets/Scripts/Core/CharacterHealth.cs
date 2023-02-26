@@ -106,12 +106,25 @@ public class CharacterHealth : MonoBehaviour
                 SubHealth();
                 invincibleTimer = 0;
                 collider.GetComponent<Entity>().SetActive(false);
+
+                if (collider.CompareTag("DeadFish"))
+                {
+                    AudioManager.i.PlaySfx(SfxId.TreatShot);
+                }
             }
         }
 
         else if ((healingLayers & (1 << collider.gameObject.layer)) != 0)
         {
             AddHealth();
+            if (collider.CompareTag("CatTreat"))
+            {
+                Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+                rb.AddForce(GlobalSettings.i.BoostSpeed * Vector2.up, ForceMode2D.Impulse);
+
+                AudioManager.i.PlaySfx(SfxId.TreatShot);
+            }
             collider.GetComponent<Entity>().SetActive(false);
         }
     }

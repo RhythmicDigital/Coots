@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1254382913549969964}
   m_Layer: 15
   m_Name: CatTreat
-  m_TagString: Entity
+  m_TagString: CatTreat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

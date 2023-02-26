@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3454614131231676777}
   m_Layer: 14
   m_Name: DeadFish
-  m_TagString: Entity
+  m_TagString: DeadFish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
