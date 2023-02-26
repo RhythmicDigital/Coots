@@ -74,9 +74,9 @@ public class CharacterController2D : MonoBehaviour
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         Collider2D[] colliders =
             Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround).Concat(
-                Physics2D.OverlapCircleAll(m_GroundCheck.position + 2.5f * k_GroundedRadius * Vector3.left, k_GroundedRadius, m_WhatIsGround)
+                Physics2D.OverlapCircleAll(m_GroundCheck.position + k_GroundedRadius * Vector3.left, k_GroundedRadius, m_WhatIsGround)
             ).Concat(
-                Physics2D.OverlapCircleAll(m_GroundCheck.position + 2.5f * k_GroundedRadius * Vector3.right, k_GroundedRadius, m_WhatIsGround)
+                Physics2D.OverlapCircleAll(m_GroundCheck.position + k_GroundedRadius * Vector3.right, k_GroundedRadius, m_WhatIsGround)
             ).ToArray();
         for (int i = 0; i < colliders.Length; i++)
         {
