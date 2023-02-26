@@ -10,6 +10,7 @@ public class GrabController : MonoBehaviour
 
     private DistanceJoint2D _ropeJoint;
     private Transform _ropeJointTransform;
+    private Entity _connectedEntity;
 
     private bool _connected;
     public bool Grabbing => _connected;
@@ -66,6 +67,7 @@ public class GrabController : MonoBehaviour
         _lr.enabled = true;
 
         _distance = Vector3.Distance(hit.point, transform.position);
+        _connectedEntity = hit.rigidbody.GetComponent<Entity>();
 
 
         _ropeJointTransform.position = transform.position;
@@ -83,6 +85,7 @@ public class GrabController : MonoBehaviour
         _ropeJoint.enabled = false;
         _lr.enabled = false;
         _connected = false;
+        _connectedEntity = null;
 
         if (_currentRoutine != null) StopCoroutine(_currentRoutine);
         _currentRoutine = null;
@@ -91,6 +94,11 @@ public class GrabController : MonoBehaviour
     public void HandleUpdate()
     {
         if (!_connected || _currentRoutine != null || !_ropeJoint.enabled) return;
+        if (_connectedEntity && _connectedEntity.State != EntityState.Active)
+        {
+            Disconnect();
+            return;
+        }
         var connectedTo = _ropeJoint.connectedBody.transform.TransformPoint(_ropeJoint.connectedAnchor);
         _lr.SetPosition(0, transform.position);
         _lr.SetPosition(1, connectedTo);
@@ -99,6 +107,12 @@ public class GrabController : MonoBehaviour
     public void HandleFixedUpdate()
     {
         if (!_connected || _currentRoutine != null || !_ropeJoint.enabled) return;
+        if (_connectedEntity && _connectedEntity.State != EntityState.Active)
+        {
+            Disconnect();
+            return;
+        }
+
         _distance -= Time.fixedDeltaTime * 25;
         if (_distance <= 0)
         {
